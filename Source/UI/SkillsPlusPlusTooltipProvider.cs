@@ -1,3 +1,4 @@
+using RoR2;
 using RoR2.UI;
 using UnityEngine;
 
@@ -16,20 +17,28 @@ namespace SkillsPlusPlus.UI {
             if (skillName == null) {
                 return null;
             }
-            if (skillName == "")
+            if (skillName == "" || Language.IsTokenInvalid((skillName + "_UPGRADE_DESCRIPTION").ToUpper()))
             {
                 skillName = "DEFAULT";
             }
+            Logger.Debug("skill name = {0}", skillName);
             return (skillName + "_UPGRADE_DESCRIPTION").ToUpper();
         }
 
         internal string GetToken() {
-            if (skillName != null) {
+            skillIcon = GetComponent<SkillIcon>();
+            var skillIndex = (skillIcon.targetSkill?.characterBody?.skillLocator);
+            Logger.Debug(((ScriptableObject)skillIcon.targetSkill?.skillDef)?.name);
+            Logger.Debug(skillIndex.passiveSkill.skillNameToken);
+            if (skillName != null && skillIndex != null && skillIndex.passiveSkill.skillNameToken != skillName) {
                 return SkillNameToToken(skillName);
             }
-            if (skillIcon) {
+            if (skillIcon)
+            {
+                Logger.Debug(((ScriptableObject)skillIcon.targetSkill?.skillDef)?.name);
+                Logger.Debug(skillIndex.passiveSkill.skillNameToken);
                 var skillName = ((ScriptableObject)skillIcon.targetSkill?.skillDef)?.name;
-                if (skillName != null) {
+                if (skillName != null && skillIndex != null && skillIndex.passiveSkill.skillNameToken != skillName) {
                     return SkillNameToToken(skillName);
                 }
             }

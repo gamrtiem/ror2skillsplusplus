@@ -238,8 +238,8 @@ namespace SkillsPlusPlus.Modifiers {
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            armorBonus = AdditiveScaling(0, 20, level);
-            damageBonus = AdditiveScaling(0, 0.2f, level);
+            armorBonus = AdditiveScaling(0, 25, level);
+            damageBonus = AdditiveScaling(0, 0.15f, level);
             moveSpeedBonus = AdditiveScaling(0, 1f, level);
             Logger.Debug("leveled up dualwield");
         }

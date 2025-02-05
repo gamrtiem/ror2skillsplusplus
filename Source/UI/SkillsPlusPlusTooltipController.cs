@@ -29,7 +29,7 @@ namespace SkillsPlusPlus.UI {
                 var description = Language.GetString(skillUpgradeToken);
                 var label = skillUpgradeRect.GetComponentInChildren<TMPro.TextMeshProUGUI>();
                 label.text = Language.GetStringFormatted("TOOLTIP_UPGRADE_DESCRIPTION", description);
-            }
+            } 
         }
 
     }
