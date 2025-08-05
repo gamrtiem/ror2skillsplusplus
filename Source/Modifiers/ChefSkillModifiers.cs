@@ -1,12 +1,42 @@
-﻿namespace SkillsPlusPlus.Source.Modifiers
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+
+using EntityStates;
+using EntityStates.Chef;
+
+using RoR2;
+using RoR2.Projectile;
+using RoR2.Skills;
+using SkillsPlusPlus.Modifiers;
+using static R2API.RecalculateStatsAPI;
+
+namespace SkillsPlusPlus.Source.Modifiers
 {
-    /*[SkillLevelModifier("ChefDice", typeof(Dice))]
+    [SkillLevelModifier("ChefDice", typeof(Dice))]
     class ChefDiceSkillModifier : BaseSkillModifier
     {
-
+        private int locallevel;
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
+        }
+
+        public override void SetupSkill()
+        {
+            base.SetupSkill();
+            
+            On.RoR2.Projectile.CleaverProjectile.ChargeCleaver += CleaverProjectileOnChargeCleaver;
+        }
+
+        private void CleaverProjectileOnChargeCleaver(On.RoR2.Projectile.CleaverProjectile.orig_ChargeCleaver orig, CleaverProjectile self)
+        {
+            if (!self.charged)
+            {
+                //increase projectile size of returning dices by 30%
+                self.projectileOverlapAttack.transform.localScale *= AdditiveScaling(1, .3f, locallevel);
+            }
+            orig(self);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -15,11 +45,29 @@
             if (skillState is Dice dice)
             {
                 Logger.Debug("Dice");
-                //dice.force = AdditiveScaling(4, 3, level);
-                //chargeState.baseChargeDuration = MultScaling(chargeState.baseChargeDuration, -0.15f, level); // +15% charge spee
+                
+                //hasboost is used with yes chef !!
+                if (!dice.hasBoost)
+                {
+                    Logger.Debug($"charge time be4 {dice.cleaverController.holdChargeTime}");
+                    Logger.Debug($"charge damage coeff {dice.cleaverController.chargedDamageCoefficient}");
+                    Logger.Debug($"prjectile damage  {dice.damageCoefficient}");
+                    Logger.Debug($"travel distance {dice.cleaverController.maxTravelDistance}");
+                    
+                    //dice.cleaverController.holdChargeTime = MultScaling(0.33f, 0.80f, level); // base 0.33
+                    dice.cleaverController.maxTravelDistance = AdditiveScaling(55f, 10f, level); //base 55
+                    dice.damageCoefficient = AdditiveScaling(2f, .5f, level); // base 2 (200% dmg)
+                    
+                    Logger.Debug($"travel distance after {dice.cleaverController.maxTravelDistance}");
+                    Logger.Debug($"damage after {dice.damageCoefficient}");
+
+                    locallevel = level;
+                }
             }
         }
     }
+    
+    
 
     [SkillLevelModifier("ChefSear", typeof(Sear))]
     class ChefSearSkillModifier : BaseSkillModifier
@@ -36,12 +84,12 @@
 
             if (skillState is Sear)
             {
-                Logger.Debug("FireCorruptHandBeam");
+                Logger.Debug("Sear");
             }
         }
     }
 
-    [SkillLevelModifier("ChefRolyPoly", typeof(RolyPoly), typeof(ChargeRolyPoly), typeof(RolyPolyWeaponBlockingState),
+    [SkillLevelModifier("ChefRolyPoly", typeof(RolyPoly), typeof(RolyPolyWeaponBlockingState),
         typeof(RolyPolyBoostedProjectileTimer))]
     class ChefRolyPolySkillModifier : BaseSkillModifier
     {
@@ -58,10 +106,6 @@
             if (skillState is RolyPoly)
             {
                 Logger.Debug("RolyPoly");
-            }
-            else if (skillState is ChargeRolyPoly)
-            {
-                Logger.Debug("ChargeRolyPoly");
             }
             else if (skillState is RolyPolyWeaponBlockingState)
             {
@@ -91,7 +135,7 @@
     }
 
     [SkillLevelModifier("YesChef", typeof(YesChef))]
-    class ChefYesChefSkillModifier : BaseSkillModifier
+    class YesChefSkillModifier : BaseSkillModifier
     {
 
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
@@ -108,5 +152,52 @@
                 Logger.Debug("YesChef");
             }
         }
-    }*/
+    }
+    
+    [SkillLevelModifier("ChefOilSpill", typeof(OilSpillBase), typeof(OilSpillV1), typeof(OilSpillV2))]
+    class ChefOilSpillSkillModifier : BaseSkillModifier
+    {
+
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
+            base.OnSkillLeveledUp(level, characterBody, skillDef);
+        }
+
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
+            base.OnSkillEnter(skillState, level);
+
+            if (skillState is OilSpillV1)
+            {
+                Logger.Debug("OilSpillV1");
+            } 
+            else if (skillState is OilSpillV2)
+            {
+                Logger.Debug("OilSpillV2");
+            } else if (skillState is OilSpillBase)
+            {
+                Logger.Debug("OilSpillBase");
+            } 
+        }
+    }
+    
+    [SkillLevelModifier("ChefIceBox", typeof(IceBox))]
+    class ChefIceBoxSkillModifier : BaseSkillModifier
+    {
+
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
+            base.OnSkillLeveledUp(level, characterBody, skillDef);
+        }
+
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
+            base.OnSkillEnter(skillState, level);
+
+            if (skillState is IceBox)
+            {
+                Logger.Debug("IceBox");
+            } 
+        }
+    }
 }
