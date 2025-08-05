@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using R2API.Utils;
-using Rewired;
+﻿using Rewired;
 using RiskOfOptions;
 using RoR2;
 using RoR2.UI;
-using RoR2.UI.SkinControllers;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace SkillsPlusPlus {
-
-    sealed class SkillLevelIconController : MonoBehaviour {
+namespace SkillsPlusPlus
+{
+    internal sealed class SkillLevelIconController : MonoBehaviour
+    {
 
         private static string BUY_TOKEN = "SKILLS_SLOT_BUY_BTN";
 
@@ -29,11 +24,8 @@ namespace SkillsPlusPlus {
         private CanvasRenderer CanBuyBorderRenderer;
         public SkillUpgrade skillUpgrade;
 
-        public GenericSkill genericSkill {
-            get { return skillIcon?.targetSkill; }
-        }
-
-        void Awake() {
+        private void Awake()
+        {
             this.skillIcon = GetComponent<SkillIcon>();
 
             this.CanBuyPanel = Instantiate(skillIcon.isReadyPanelObject, skillIcon.transform);
@@ -131,8 +123,10 @@ namespace SkillsPlusPlus {
             }
         }
 
-        void Update() {
-            if (skillIcon) {
+        private void Update()
+        {
+            if (skillIcon)
+            {
                 if (skillIcon.targetSkill)  //Prevents errors when morphing to Heretic
                 {
                     var skillUpgrades = skillIcon.targetSkill?.characterBody?.GetComponents<SkillUpgrade>();
@@ -140,7 +134,7 @@ namespace SkillsPlusPlus {
                     {
                         foreach (var skillUpgrade in skillUpgrades)
                         {
-                            if (skillUpgrade.targetGenericSkill && ((ScriptableObject)genericSkill.skillDef)?.name == ((ScriptableObject)skillUpgrade.targetGenericSkill.skillDef)?.name)
+                            if (skillUpgrade.targetGenericSkill && ((ScriptableObject)skillIcon?.targetSkill.skillDef)?.name == ((ScriptableObject)skillUpgrade.targetGenericSkill.skillDef)?.name)
                             {
                                 this.skillUpgrade = skillUpgrade;
                             }
@@ -149,26 +143,32 @@ namespace SkillsPlusPlus {
                 }
             }
 
-            if (skillUpgrade) {
+            if (skillUpgrade)
+            {
                 var canBuySkill = skillUpgrade.CanUpgradeSkill();
-                if (levelTextMesh != null) {
+                if (levelTextMesh != null)
+                {
                     levelTextMesh.text = skillUpgrade.skillLevel > 0 ? skillUpgrade.skillLevel.ToString() : null;
                 }
                 CanBuyBorderRenderer.gameObject.SetActive(canBuySkill);
                 CanBuyBorderRenderer.SetColor(Color.yellow);
 
                 var masterController = skillIcon?.playerCharacterMasterController;
-                if (masterController) {
+                if (masterController)
+                {
 
                     LocalUser localUser = masterController?.networkUser?.localUser;
                     Player inputPlayer = localUser?.inputPlayer;
 
-                    if (inputPlayer != null) {
+                    if (inputPlayer != null)
+                    {
                         //if (localUser.eventSystem.currentInputSource == MPEventSystem.InputSource.Gamepad) {
-                        if (skillIcon != null) {
+                        if (skillIcon != null)
+                        {
                             SkillSlot skillSlot = skillIcon.targetSkillSlot;
                             int skillAction = 0;
-                            switch (skillSlot) {
+                            switch (skillSlot)
+                            {
                                 case SkillSlot.None:
                                     skillAction = 0;
                                     break;
@@ -186,7 +186,8 @@ namespace SkillsPlusPlus {
                                     break;
                             }
                             UpgradeButton.SetActive(canBuySkill && ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(RewiredConsts.Action.Info));
-                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive())) {
+                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive()))
+                            {
                                 this.OnBuySkill();
                             }
                         }
@@ -198,8 +199,10 @@ namespace SkillsPlusPlus {
             }
         }
 
-        private void OnBuySkill() {
-            if (skillUpgrade) {
+        private void OnBuySkill()
+        {
+            if (skillUpgrade)
+            {
                 skillUpgrade.OnBuySkill();
             }
         }

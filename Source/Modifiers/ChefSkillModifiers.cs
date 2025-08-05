@@ -1,21 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-using SkillsPlusPlus.Modifiers;
-using RoR2;
-
-using EntityStates;
-using EntityStates.Chef;
-
-using RoR2.Projectile;
-using RoR2.Skills;
-
-using System.Linq;
-using UnityEngine.AddressableAssets;
-using EntityStates.VoidSurvivor.CorruptMode;
-
-namespace SkillsPlusPlus.Source.Modifiers {
+﻿namespace SkillsPlusPlus.Source.Modifiers
+{
     /*[SkillLevelModifier("ChefDice", typeof(Dice))]
     class ChefDiceSkillModifier : BaseSkillModifier
     {

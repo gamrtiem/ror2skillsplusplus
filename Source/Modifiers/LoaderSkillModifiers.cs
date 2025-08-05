@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using RoR2;
+﻿using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
-
-using SkillsPlusPlus.Modifiers;
 
 using EntityStates;
 using EntityStates.Loader;
@@ -14,12 +8,15 @@ using EntityStates.Loader;
 using UnityEngine;
 using RoR2.UI;
 
-namespace SkillsPlusPlus.Modifiers {
+namespace SkillsPlusPlus.Modifiers
+{
 
     [SkillLevelModifier("SwingFist", typeof(SwingComboFist))]
-    class LoaderKnucklesSkillModifier : SimpleSkillModifier<SwingComboFist> {
+    internal class LoaderKnucklesSkillModifier : SimpleSkillModifier<SwingComboFist>
+    {
 
-        public override void OnSkillEnter(SwingComboFist skillState, int level) {
+        public override void OnSkillEnter(SwingComboFist skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
             skillState.damageCoefficient = MultScaling(skillState.damageCoefficient, 0.20f, level);
             SwingComboFist.barrierPercentagePerHit = AdditiveScaling(0.05f, 0.01f, level);
@@ -27,17 +24,18 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("GroundSlam", typeof(GroundSlam), typeof(PreGroundSlam))]
-    class LoaderThunderSlamSkillModifier : BaseSkillModifier {
+    internal class LoaderThunderSlamSkillModifier : BaseSkillModifier
+    {
+        private static float baseUpwardVelocity = 0f;
+        private static float baseVerticalAcceleration = 0f;
+        private static float baseBlastRadius = 0f;
+        private static float maxVerticalCap = 0f;
+        private static Vector3 initialPosition;
+        private static SkillUpgrade slamSkill;
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
 
-        static float baseUpwardVelocity = 0f;
-        static float baseVerticalAcceleration = 0f;
-        static float baseBlastRadius = 0f;
-        static float maxVerticalCap = 0f;
-        static Vector3 initialPosition;
-        static SkillUpgrade slamSkill;
-        public override void OnSkillEnter(BaseState skillState, int level) {
-
-            if(skillState is GroundSlam)
+            if (skillState is GroundSlam)
             {
                 initialPosition = skillState.outer.commonComponents.characterBody.transform.position;
 
@@ -50,7 +48,7 @@ namespace SkillsPlusPlus.Modifiers {
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if(Mathf.Abs(baseUpwardVelocity) < 0.01f)
+            if (Mathf.Abs(baseUpwardVelocity) < 0.01f)
             {
                 baseUpwardVelocity = PreGroundSlam.upwardVelocity;
                 baseVerticalAcceleration = GroundSlam.verticalAcceleration;
@@ -89,28 +87,35 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("FireHook", typeof(FireHook))]
-    class LoaderHookSkillModifier : SimpleSkillModifier<FireHook> {
+    internal class LoaderHookSkillModifier : SimpleSkillModifier<FireHook>
+    {
 
-        public override void OnSkillEnter(FireHook skillState, int level) {
+        public override void OnSkillEnter(FireHook skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
-            if(skillState.projectilePrefab.TryGetComponent(out ProjectileGrappleController grappleController)) {
+            if (skillState.projectilePrefab.TryGetComponent(out ProjectileGrappleController grappleController))
+            {
                 grappleController.maxTravelDistance = MultScaling(80, 0.30f, level);
             }
             CharacterBody body = skillState.outer.commonComponents.characterBody;
             GenericSkill utilitySkill = skillState.outer?.commonComponents.skillLocator?.utility;
-            if(utilitySkill != null && utilitySkill.stock <= utilitySkill.maxStock) {
+            if (utilitySkill != null && utilitySkill.stock <= utilitySkill.maxStock)
+            {
                 // utilitySkill.AddOneStock();
             }
         }
 
-        public override void OnSkillExit(FireHook skillState, int level) {
+        public override void OnSkillExit(FireHook skillState, int level)
+        {
             base.OnSkillExit(skillState, level);
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if(characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController)) {
+            if (characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
+            {
                 hookCrosshairController.range = MultScaling(80, 0.30f, level);
             }
         }
@@ -118,24 +123,28 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("FireYankHook", typeof(FireYankHook))]
-    class LoaderYankHookSkillModifier : SimpleSkillModifier<FireYankHook> {
+    internal class LoaderYankHookSkillModifier : SimpleSkillModifier<FireYankHook>
+    {
+        private static float baseDamageCoeff = 0f;
 
-        static float baseDamageCoeff = 0f;
-
-        public override void OnSkillEnter(FireYankHook skillState, int level) {
+        public override void OnSkillEnter(FireYankHook skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
-            if(skillState.projectilePrefab.TryGetComponent(out ProjectileGrappleController grappleController)) {
+            if (skillState.projectilePrefab.TryGetComponent(out ProjectileGrappleController grappleController))
+            {
                 grappleController.maxTravelDistance = MultScaling(80, 0.15f, level);
             }
         }
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
 
-            if(Mathf.Abs(baseDamageCoeff) < 0.1f)
+            if (Mathf.Abs(baseDamageCoeff) < 0.1f)
             {
                 baseDamageCoeff = FireYankHook.damageCoefficient;
             }
-            if (characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController)) {
+            if (characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
+            {
                 hookCrosshairController.range = MultScaling(80, 0.15f, level);
             }
 
@@ -145,23 +154,29 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier(new string[] { "ChargeFist", "Megaton Punch" }, typeof(ChargeFist), typeof(SwingChargedFist))]
-    class LoaderChargeFistSkillModifier : BaseSkillModifier {
+    internal class LoaderChargeFistSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState baseState, int level) {
+        public override void OnSkillEnter(BaseState baseState, int level)
+        {
             base.OnSkillEnter(baseState, level);
-            if(baseState is ChargeFist) {
+            if (baseState is ChargeFist)
+            {
                 ChargeFist chargeState = (ChargeFist)baseState;
                 chargeState.baseChargeDuration = MultScaling(chargeState.baseChargeDuration, 0.10f, level); // +10% max charge duration
-            } else if(baseState is SwingChargedFist) {
+            }
+            else if (baseState is SwingChargedFist)
+            {
                 SwingChargedFist swingState = (SwingChargedFist)baseState;
                 swingState.maxLungeSpeed = MultScaling(swingState.maxLungeSpeed, 0.15f, level); // +10% max lunge speed
                 swingState.maxPunchForce = MultScaling(swingState.maxPunchForce, 0.15f, level); // +10% max pucnh force
                 // swingState.maxDuration = MultScaling(swingState.maxDuration, 0.10f, level); // +10% max launge speed
             }
-            
+
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             BaseSwingChargedFist.velocityDamageCoefficient = MultScaling(0.3f, 0.20f, level);
         }
@@ -169,24 +184,31 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier(new string[] { "ChargeZapFist", "Thundercrash" }, typeof(ChargeZapFist), typeof(SwingZapFist))]
-    class LoaderChargeZapFistSkillModifier : BaseSkillModifier {
+    internal class LoaderChargeZapFistSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState baseState, int level) {
+        public override void OnSkillEnter(BaseState baseState, int level)
+        {
             base.OnSkillEnter(baseState, level);
-            if(baseState is ChargeZapFist) {
+            if (baseState is ChargeZapFist)
+            {
                 ChargeZapFist chargeState = (ChargeZapFist)baseState;
                 chargeState.baseChargeDuration = MultScaling(chargeState.baseChargeDuration, -0.15f, level); // +15% charge speed
-            } else if(baseState is SwingZapFist) {
+            }
+            else if (baseState is SwingZapFist)
+            {
                 SwingZapFist swingState = (SwingZapFist)baseState;
                 swingState.damageCoefficient = MultScaling(swingState.damageCoefficient, 0.15f, level);
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             Logger.Debug(SwingZapFist.selfKnockback);
             SwingZapFist.selfKnockback = MultScaling(7000, 0.015f, level); // +10% knockback
-            if(SwingZapFist.overchargeImpactEffectPrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController)) {
+            if (SwingZapFist.overchargeImpactEffectPrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController))
+            {
                 proximityBeamController.attackRange = MultScaling(40, 0.20f, level);
             }
         }
@@ -195,22 +217,26 @@ namespace SkillsPlusPlus.Modifiers {
 
     // duplicate skill name
     [SkillLevelModifier("ThrowPylon", typeof(ThrowPylon))]
-    class LoaderThrowPylonSkillModifier : SimpleSkillModifier<ThrowPylon> {
+    internal class LoaderThrowPylonSkillModifier : SimpleSkillModifier<ThrowPylon>
+    {
 
         public override void SetupSkill()
         {
             base.SetupSkill();
         }
 
-        public override void OnSkillEnter(ThrowPylon skillState, int level) {
+        public override void OnSkillEnter(ThrowPylon skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             Logger.Debug("baseDuration: {0}, damageCoefficient: {1}", ThrowPylon.baseDuration, ThrowPylon.damageCoefficient);
             ThrowPylon.damageCoefficient = MultScaling(1.0f, 0.2f, level);
-            if(ThrowPylon.projectilePrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController)) {
+            if (ThrowPylon.projectilePrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController))
+            {
                 //proximityBeamController.bounces = (int)AdditiveScaling(1, 0.5f, level);
                 proximityBeamController.attackRange = MultScaling(15f, 0.20f, level);
                 //proximityBeamController.attackFireCount = AdditiveScaling(6, 1, level);

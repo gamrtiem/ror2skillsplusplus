@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 
 using RoR2;
 using RoR2.Projectile;
@@ -16,12 +14,15 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using static RoR2.RoR2Content;
 
-namespace SkillsPlusPlus.Modifiers {
+namespace SkillsPlusPlus.Modifiers
+{
 
     [SkillLevelModifier("ToolbotBodyFireNailgun", typeof(FireNailgun))]
-    class ToolbotSkillModifier : SimpleSkillModifier<FireNailgun> {
+    internal class ToolbotSkillModifier : SimpleSkillModifier<FireNailgun>
+    {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             NailgunFinalBurst.finalBurstBulletCount = AdditiveScaling(12, 4, level);
             FireNailgun.damageCoefficient = MultScaling(0.7f, 0.20f, level);
@@ -31,63 +32,77 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("ToolbotBodyFireSpear", typeof(FireSpear), typeof(CooldownSpear))]
-    class ToolbotSpearSkillModifier : BaseSkillModifier {
+    internal class ToolbotSpearSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
             Logger.Debug("skillState: {0}", skillState);
-            if(skillState is FireSpear fireSpear) {
+            if (skillState is FireSpear fireSpear)
+            {
                 Logger.Debug("baseDuration: {0}", fireSpear.baseDuration);
                 fireSpear.baseDuration = MultScaling(fireSpear.baseDuration, -0.15f, level);
                 fireSpear.damageCoefficient = MultScaling(fireSpear.damageCoefficient, 0.10f, level);
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             CooldownSpear.baseDuration = MultScaling(0.7f, -0.15f, level);
         }
     }
 
     [SkillLevelModifier("ToolbotBodyFireGrenadeLauncher", typeof(FireGrenadeLauncher))]
-    class ToolbotGrenadeLauncherSkillModifier : SimpleSkillModifier<FireGrenadeLauncher> {
+    internal class ToolbotGrenadeLauncherSkillModifier : SimpleSkillModifier<FireGrenadeLauncher>
+    {
 
         private static readonly float stockImageInterspacing = 13.5f;
 
-        public override void OnSkillEnter(FireGrenadeLauncher skillState, int level) {
+        public override void OnSkillEnter(FireGrenadeLauncher skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
             skillState.damageCoefficient = MultScaling(skillState.damageCoefficient, 0.20f, level);
-            if(skillState.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion)) {
+            if (skillState.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
+            {
                 projectileImpactExplosion.blastRadius = MultScaling(7, 0.15f, level);
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             int stocks = AdditiveScaling(4, 1, level);
 
             skillDef.baseMaxStock = stocks;
-            
-            if(skillDef is ToolbotWeaponSkillDef) {
+
+            if (skillDef is ToolbotWeaponSkillDef)
+            {
                 // return;
                 // instantiate a new version of the prefab because it will cause the crosshair manager to recognize a new
                 // prefab and reload the crosshair displayed on screen
                 GameObject crosshairPrefab = ((ToolbotWeaponSkillDef)skillDef).crosshairPrefab;
-                if(crosshairPrefab.TryGetComponent(out CrosshairController crosshairController)) {
+                if (crosshairPrefab.TryGetComponent(out CrosshairController crosshairController))
+                {
                     GameObject stockCountHolderGameObject = crosshairController.gameObject.transform.Find("StockCountHolder").gameObject;
                     RectTransform stockCountHolderRectTransform = stockCountHolderGameObject.GetComponent<RectTransform>();
 
                     List<GameObject> stockGameObjects = new List<GameObject>();
                     GameObject stockPrefab = null;
-                    for(int i = 0; i < stockCountHolderGameObject.transform.childCount; i++) {
-                        if(stockPrefab == null) {
+                    for (int i = 0; i < stockCountHolderGameObject.transform.childCount; i++)
+                    {
+                        if (stockPrefab == null)
+                        {
                             stockPrefab = stockCountHolderGameObject.transform.GetChild(i).gameObject;
                         }
                         stockGameObjects.Add(stockCountHolderGameObject.transform.GetChild(i).gameObject);
                     }
 
-                    if(stockPrefab) {
-                        while(stockGameObjects.Count < stocks) {
+                    if (stockPrefab)
+                    {
+                        while (stockGameObjects.Count < stocks)
+                        {
                             GameObject newStock = GameObject.Instantiate(stockPrefab);
                             newStock.transform.parent = stockCountHolderGameObject.transform;
                             RectTransform stockRectTransform = newStock.GetComponent<RectTransform>();
@@ -108,8 +123,10 @@ namespace SkillsPlusPlus.Modifiers {
 
                     CrosshairController.SkillStockSpriteDisplay[] stockDisplays = new CrosshairController.SkillStockSpriteDisplay[stocks];
                     float anchorIncrement = 1f / stocks;
-                    for(int i = 0; i < Math.Min(stocks, stockGameObjects.Count); i++) {
-                        stockDisplays[i] = new CrosshairController.SkillStockSpriteDisplay() {
+                    for (int i = 0; i < Math.Min(stocks, stockGameObjects.Count); i++)
+                    {
+                        stockDisplays[i] = new CrosshairController.SkillStockSpriteDisplay()
+                        {
                             target = stockGameObjects[i],
                             skillSlot = SkillSlot.Primary,
                             minimumStockCountToBeValid = i + 1,
@@ -121,27 +138,32 @@ namespace SkillsPlusPlus.Modifiers {
                         stockRectTransform.ForceUpdateRectTransforms();
                     }
 
-                    crosshairController.skillStockSpriteDisplays = stockDisplays;                    
+                    crosshairController.skillStockSpriteDisplays = stockDisplays;
                 }
             }
         }
     }
 
     [SkillLevelModifier("ToolbotBodyFireBuzzsaw", typeof(FireBuzzsaw))]
-    class ToolbotBuzzsawSkillModifier : SimpleSkillModifier<FireBuzzsaw> {
+    internal class ToolbotBuzzsawSkillModifier : SimpleSkillModifier<FireBuzzsaw>
+    {
 
-        public override void OnSkillEnter(FireBuzzsaw fireBuzzsaw, int level) {
+        public override void OnSkillEnter(FireBuzzsaw fireBuzzsaw, int level)
+        {
             base.OnSkillEnter(fireBuzzsaw, level);
             Transform modelTransform = fireBuzzsaw.outer?.commonComponents.modelLocator?.modelTransform;
-            if(modelTransform) {
+            if (modelTransform)
+            {
                 HitBoxGroup buzzsawHitBoxGroup = Array.Find(modelTransform.GetComponents<HitBoxGroup>(), (HitBoxGroup element) => element.groupName == "Buzzsaw");
-                foreach(HitBox hitBox in buzzsawHitBoxGroup.hitBoxes) {
+                foreach (HitBox hitBox in buzzsawHitBoxGroup.hitBoxes)
+                {
                     hitBox.transform.localScale = new Vector3(21.04f, 21.04f, 12.04f) * MultScaling(1, 0.3f, level);
                 }
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             Logger.Debug("baseFireFrequency: {0}", FireBuzzsaw.baseFireFrequency);
             FireBuzzsaw.damageCoefficientPerSecond = MultScaling(10, 0.20f, level);
@@ -150,19 +172,24 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("ToolbotBodyStunDrone", typeof(AimStunDrone))]
-    class ToolbotStunDroneSkillModifier : SimpleSkillModifier<AimStunDrone> {
+    internal class ToolbotStunDroneSkillModifier : SimpleSkillModifier<AimStunDrone>
+    {
 
-        public override void OnSkillEnter(AimStunDrone aimStunDrone, int level) {
+        public override void OnSkillEnter(AimStunDrone aimStunDrone, int level)
+        {
             base.OnSkillEnter(aimStunDrone, level);
             Logger.Debug("damageCoefficient: {0}, baseMinimumDuration: {1}, maxDistance: {2}", aimStunDrone.damageCoefficient, aimStunDrone.baseMinimumDuration, aimStunDrone.maxDistance);
             aimStunDrone.maxDistance = MultScaling(aimStunDrone.maxDistance, 0.4f, level); // 2 * 20%
-            if(aimStunDrone.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion)) {
+            if (aimStunDrone.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
+            {
                 projectileImpactExplosion.blastRadius = MultScaling(12f, 0.20f, level);
                 projectileImpactExplosion.childrenCount = AdditiveScaling(5, 3, level);
-                if(projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileSimple projectileSimple)) {
+                if (projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileSimple projectileSimple))
+                {
                     projectileSimple.desiredForwardSpeed = MultScaling(10, 0.4f, level); // 2 * 20%
                 }
-                if(projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileImpactExplosion clusterProjectileExplosion)) {
+                if (projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileImpactExplosion clusterProjectileExplosion))
+                {
                     clusterProjectileExplosion.blastRadius = MultScaling(6, 0.20f, level);
                     clusterProjectileExplosion.blastDamageCoefficient = MultScaling(1, 0.20f, level);
                 }
@@ -171,9 +198,11 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier(new string[] { "ToolbotBodyToolbotDash", "Breach Mode" }, typeof(ToolbotDash))]
-    class ToolbotDashSkillModifier : SimpleSkillModifier<ToolbotDash> {
+    internal class ToolbotDashSkillModifier : SimpleSkillModifier<ToolbotDash>
+    {
 
-        public override void OnSkillEnter(ToolbotDash toolbotDash, int level) {
+        public override void OnSkillEnter(ToolbotDash toolbotDash, int level)
+        {
             base.OnSkillEnter(toolbotDash, level);
             Logger.Debug("baseDuration: {0}, speedMultiplier: {2}, chargeDamageCoefficient: {5}, knockbackForce: {1}, knockbackDamageCoefficient: {3}, massThresholdForKnockback: {4}", toolbotDash.baseDuration, ToolbotDash.knockbackForce, toolbotDash.speedMultiplier, ToolbotDash.knockbackDamageCoefficient, ToolbotDash.massThresholdForKnockback, ToolbotDash.chargeDamageCoefficient);
             // baseDuration: 2, speedMultiplier: 2.2, knockbackForce: 8000, knockbackDamageCoefficient: 10, massThresholdForKnockback: 250
@@ -181,7 +210,8 @@ namespace SkillsPlusPlus.Modifiers {
             toolbotDash.speedMultiplier = MultScaling(2.2f, 0.10f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             ToolbotDash.chargeDamageCoefficient = MultScaling(2.5f, 0.30f, level);
             ToolbotDash.knockbackDamageCoefficient = MultScaling(10, 0.30f, level);
@@ -191,18 +221,22 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("ToolbotBodySwap", typeof(ToolbotStanceSwap))]
-    class ToolbotEquipmentSwapSkillModifier : SimpleSkillModifier<ToolbotStanceSwap> {
+    internal class ToolbotEquipmentSwapSkillModifier : SimpleSkillModifier<ToolbotStanceSwap>
+    {
 
-        public override void OnSkillEnter(ToolbotStanceSwap toolbotStanceSwap, int level) {
+        public override void OnSkillEnter(ToolbotStanceSwap toolbotStanceSwap, int level)
+        {
             base.OnSkillEnter(toolbotStanceSwap, level);
             Logger.Debug("baseDuration: {0}", toolbotStanceSwap.GetFieldValue<float>("baseDuration"));
             // toolbotStanceSwap.SetFieldValue("baseDuration", MultScaling(0.4f, -0.25f, level));
         }
 
-        public override void OnSkillExit(ToolbotStanceSwap skillState, int level) {
+        public override void OnSkillExit(ToolbotStanceSwap skillState, int level)
+        {
             base.OnSkillExit(skillState, level);
             float duration = AdditiveScaling(0, 1, level);
-            if(duration > 0) {
+            if (duration > 0)
+            {
                 skillState.outer.commonComponents.characterBody.AddTimedBuff(Buffs.Energized, AdditiveScaling(0, 1, level));
             }
             skillState.outer.commonComponents.characterBody.inventory.DeductActiveEquipmentCooldown(level);
@@ -210,9 +244,11 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("ToolbotDualWield", typeof(ToolbotDualWield))]
-    class ToolbotPowerModeSkillModifier : SimpleSkillModifier<ToolbotDualWield> {
+    internal class ToolbotPowerModeSkillModifier : SimpleSkillModifier<ToolbotDualWield>
+    {
 
-        public override void OnSkillEnter(ToolbotDualWield toolbotStanceSwap, int level) {
+        public override void OnSkillEnter(ToolbotDualWield toolbotStanceSwap, int level)
+        {
             base.OnSkillEnter(toolbotStanceSwap, level);
             if (armorBonus > 0)
             {
@@ -226,13 +262,13 @@ namespace SkillsPlusPlus.Modifiers {
             Logger.Debug("exit dualwield");
             skillState.characterBody.SetBuffCount(dualWieldArmorBuff.buffIndex, 0);
         }
-        
-        static float armorBonus = 0f;
-        static float damageBonus = 0f;
-        static float moveSpeedBonus = 0f;
-        static BuffDef dualWieldArmorBuff;
 
-        
+        private static float armorBonus = 0f;
+        private static float damageBonus = 0f;
+        private static float moveSpeedBonus = 0f;
+        private static BuffDef dualWieldArmorBuff;
+
+
 
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
@@ -247,7 +283,7 @@ namespace SkillsPlusPlus.Modifiers {
         {
             base.SetupSkill();
             registerDualWieldBuff();
-            
+
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPIOnGetStatCoefficients;
         }
 
@@ -271,8 +307,8 @@ namespace SkillsPlusPlus.Modifiers {
             if (sender.HasBuff(dualWieldArmorBuff))
             {
                 args.damageMultAdd += damageBonus;
-                args.armorAdd += armorBonus; 
-                args.moveSpeedMultAdd += 0.2f+(0.7f-0.3f)*(1f-1f/(1f+0.6f*(moveSpeedBonus-1f))); //i hate hyperbolic </3 
+                args.armorAdd += armorBonus;
+                args.moveSpeedMultAdd += 0.2f + (0.7f - 0.3f) * (1f - 1f / (1f + 0.6f * (moveSpeedBonus - 1f))); //i hate hyperbolic </3 
             }
         }
     }

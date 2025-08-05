@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using EntityStates;
 using RoR2;
 using RoR2.Skills;
 using UnityEngine;
-using UnityEngine.Assertions;
 
-namespace SkillsPlusPlus.Modifiers {
-    public abstract class BaseSkillModifier {
+namespace SkillsPlusPlus.Modifiers
+{
+    public abstract class BaseSkillModifier
+    {
 
         /// <inheritdoc/>
         internal Type[] EntityStateTypes { get; set; }
@@ -21,17 +21,18 @@ namespace SkillsPlusPlus.Modifiers {
         /// The SkillUpgrade associated to this Modifier. Call FindSkillUpgrade to assign.
         /// </summary>
         public SkillUpgrade registeredSkill;
+        private static bool bMultScalingLinear;
 
-        static bool bMultScalingLinear;
+        public virtual string skillUpgradeDescriptionToken => null;
 
-        public virtual string skillUpgradeDescriptionToken { get { return null; } }
-
-        public BaseSkillModifier() {
+        public BaseSkillModifier()
+        {
             this.skillNames = new string[0];
             this.EntityStateTypes = new Type[0];
         }
 
-        public BaseSkillModifier(string[] skillNames, Type[] entityStateTypes) {
+        public BaseSkillModifier(string[] skillNames, Type[] entityStateTypes)
+        {
             this.skillNames = skillNames;
             this.EntityStateTypes = entityStateTypes;
         }
@@ -41,7 +42,8 @@ namespace SkillsPlusPlus.Modifiers {
         /// </summary>
         /// <param name="skillState">The entity state instance</param>
         /// <param name="level">The current level of the associated skill</param>
-        public virtual void OnSkillEnter(BaseState skillState, int level) {
+        public virtual void OnSkillEnter(BaseState skillState, int level)
+        {
             Logger.Debug("{0}.OnSkillEnter({1}, {2})", this.GetType().Name, skillState, level);
         }
 
@@ -50,7 +52,8 @@ namespace SkillsPlusPlus.Modifiers {
         /// </summary>
         /// <param name="skillState">The entity state instance</param>
         /// <param name="level">The current level of the associated skill</param>
-        public virtual void OnSkillExit(BaseState skillState, int level) {
+        public virtual void OnSkillExit(BaseState skillState, int level)
+        {
             Logger.Debug("{0}.OnSkillExit({1}, {2})", this.GetType().Name, skillState, level);
         }
 
@@ -60,7 +63,8 @@ namespace SkillsPlusPlus.Modifiers {
         /// <param name="level">The new level of the skill</param>
         /// <param name="characterBody">The player's character body</param>
         /// <param name="skillDef">The associated skill definition</param>
-        public virtual void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public virtual void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             Logger.Debug("{0}.OnSkillLeveledUp({1}, {2}, {3})", this.GetType().Name, level, characterBody, skillDef);
             FindSkillUpgrade(characterBody, "blank", true);
 
@@ -75,11 +79,13 @@ namespace SkillsPlusPlus.Modifiers {
         /// <remarks>This API is still a work in progress and may be deprecated in later releases</remarks>
         /// 
         /// <returns>The token resources for to replace the associated skills description.</returns>
-        public virtual string GetOverrideSkillDescriptionToken() {
+        public virtual string GetOverrideSkillDescriptionToken()
+        {
             return null;
         }
 
-        internal void ReportBroken(params String[] fields) {
+        internal void ReportBroken(params String[] fields)
+        {
             var fieldInfo = String.Join(",", fields);
             Logger.Warn("Skill {0} is broken. Cannot access the following items: {1}", this.GetType().FullName, fieldInfo);
         }
@@ -104,7 +110,8 @@ namespace SkillsPlusPlus.Modifiers {
         /// <param name="constant">The amount to add every level</param>
         /// <param name="level">The current level to scale up to</param>
         /// <returns></returns>
-        public static float AdditiveScaling(float baseValue, float constant, int level) {
+        public static float AdditiveScaling(float baseValue, float constant, int level)
+        {
             return baseValue + constant * level;
         }
 
@@ -118,7 +125,8 @@ namespace SkillsPlusPlus.Modifiers {
         /// <param name="constant">The amount to add every level</param>
         /// <param name="level">The current level to scale up to</param>
         /// <returns></returns>
-        public static int AdditiveScaling(int baseValue, int constant, int level) {
+        public static int AdditiveScaling(int baseValue, int constant, int level)
+        {
             return baseValue + constant * level;
         }
 
@@ -133,8 +141,10 @@ namespace SkillsPlusPlus.Modifiers {
         /// <param name="multiplier">The multiplication to apply per level</param>
         /// <param name="level">The current level to scale up to</param>
         /// <returns></returns>
-        public static float MultScaling(float baseValue, float multiplier, int level) {
-            if (multiplier <= -1) {
+        public static float MultScaling(float baseValue, float multiplier, int level)
+        {
+            if (multiplier <= -1)
+            {
                 Logger.Error("Multipliers less than -1 are not allowed as it causes sporadic behaviour with the scaling.");
                 return baseValue;
             }
@@ -144,7 +154,8 @@ namespace SkillsPlusPlus.Modifiers {
             {
                 return (float)((multiplier * level) + 1) * baseValue;
             }
-            else {
+            else
+            {
                 return (float)((Math.Pow(multiplier + 1, level) - 1) * baseValue) + baseValue;
             }
         }
@@ -166,7 +177,7 @@ namespace SkillsPlusPlus.Modifiers {
             if (bConfirmSkill && registeredSkill)
             {
                 SkillUpgrade[] upgrades = characterBody.GetComponents<SkillUpgrade>();
-                
+
                 //If registered skill isn't on this character body, null it.
                 if (Array.IndexOf(upgrades, registeredSkill) == -1)
                 {
@@ -182,7 +193,7 @@ namespace SkillsPlusPlus.Modifiers {
                 {
                     if (upgrades[i] != null)
                     {
-                        foreach(GenericSkill skill in characterBody?.skillLocator?.allSkills)
+                        foreach (GenericSkill skill in characterBody?.skillLocator?.allSkills)
                         {
                             int pos = Array.IndexOf(skillNames, ((ScriptableObject)skill.skillDef)?.name);
                             if (pos > -1)

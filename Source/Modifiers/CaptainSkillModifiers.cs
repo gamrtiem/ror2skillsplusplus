@@ -1,51 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-
-using UnityEngine;
+﻿using UnityEngine;
 
 using EntityStates;
-using EntityStates.Captain;
 using EntityStates.Captain.Weapon;
-using EntityStates.CaptainDefenseMatrixItem;
 using EntityStates.CaptainSupplyDrop;
 
 using RoR2;
 using RoR2.Projectile;
 using RoR2.Skills;
 
-using SkillsPlusPlus.Modifiers;
-using R2API.Utils;
-using R2API;
-
 using static R2API.RecalculateStatsAPI;
 
-namespace SkillsPlusPlus.Modifiers {
+namespace SkillsPlusPlus.Modifiers
+{
 
     [SkillLevelModifier("CaptainShotgun", typeof(FireCaptainShotgun), typeof(ChargeCaptainShotgun))]
-    class CaptainShotgunSkillModifier : BaseSkillModifier {
+    internal class CaptainShotgunSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
-            if(skillState is FireCaptainShotgun fireshotgun) {
-                fireshotgun.bulletCount = (int) MultScaling(fireshotgun.bulletCount, 0.2f, level);
+            if (skillState is FireCaptainShotgun fireshotgun)
+            {
+                fireshotgun.bulletCount = (int)MultScaling(fireshotgun.bulletCount, 0.2f, level);
                 fireshotgun.damageCoefficient = MultScaling(fireshotgun.damageCoefficient, 0.1f, level);
             }
         }
     }
 
     [SkillLevelModifier("CaptainTazer", typeof(FireTazer))]
-    class CaptainTaserSkillModifier : SimpleSkillModifier<FireTazer> {
+    internal class CaptainTaserSkillModifier : SimpleSkillModifier<FireTazer>
+    {
 
-        public override void OnSkillEnter(FireTazer skillState, int level) {
+        public override void OnSkillEnter(FireTazer skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if(FireTazer.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion)) {
+            if (FireTazer.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
+            {
                 projectileImpactExplosion.blastRadius = MultScaling(2, 0.4f, level);
                 projectileImpactExplosion.blastDamageCoefficient = MultScaling(1, 0.2f, level);
             }
@@ -54,19 +51,24 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier(new string[] { "PrepAirstrike", "21-Probe Salute" }, typeof(CallAirstrike1), typeof(CallAirstrike2), typeof(CallAirstrike3))]
-    class CaptainAirstrikeSkillModifier : SimpleSkillModifier<CallAirstrikeBase> {
+    internal class CaptainAirstrikeSkillModifier : SimpleSkillModifier<CallAirstrikeBase>
+    {
 
-        public override void OnSkillEnter(CallAirstrikeBase skillState, int level) {
+        public override void OnSkillEnter(CallAirstrikeBase skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
 
             var radius = MultScaling(8, 0.2f, level);
-            if(skillState.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion)) {
+            if (skillState.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
+            {
                 projectileImpactExplosion.blastRadius = radius;
                 projectileImpactExplosion.blastDamageCoefficient = MultScaling(1, 0.2f, level);
             }
-            if(skillState.projectilePrefab.TryGetComponent(out ProjectileController projectileController)) {
+            if (skillState.projectilePrefab.TryGetComponent(out ProjectileController projectileController))
+            {
                 var expanderTransform = projectileController.ghostPrefab.transform.Find("Expander");
-                if(expanderTransform != null) {
+                if (expanderTransform != null)
+                {
                     expanderTransform.localScale = Vector3.one * radius;
                 }
             }
@@ -74,11 +76,11 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier(new string[] { "PrepAirstrikeAlt" }, typeof(CallAirstrikeAlt), typeof(SetupAirstrikeAlt))]
-    class CaptainDiabloStrikeSkillModifier : BaseSkillModifier{
-
-        static int diabloStrikeProjectileCatalogIndex = -1337;
-        static float fuseDuration;
-        static SkillUpgrade diabloSkill;
+    internal class CaptainDiabloStrikeSkillModifier : BaseSkillModifier
+    {
+        private static int diabloStrikeProjectileCatalogIndex = -1337;
+        private static float fuseDuration;
+        private static SkillUpgrade diabloSkill;
 
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
@@ -92,7 +94,8 @@ namespace SkillsPlusPlus.Modifiers {
             fuseDuration = Mathf.Clamp(20f - (level), 0f, 20f);
         }
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
 
             //Try and update the speed of the Indicator
@@ -102,13 +105,13 @@ namespace SkillsPlusPlus.Modifiers {
                 var CenterTransform = projectileController.ghostPrefab.transform.Find("AreaIndicatorCenter");
                 if (CenterTransform != null)
                 {
-                    for(int i = 0; i < CenterTransform.childCount; i++)
+                    for (int i = 0; i < CenterTransform.childCount; i++)
                     {
                         var child = CenterTransform.GetChild(i);
-                        if(child != null && child.gameObject != null)
+                        if (child != null && child.gameObject != null)
                         {
                             //Update the Ring Animation
-                            if(child.TryGetComponent(out ObjectScaleCurve scaleCurve))
+                            if (child.TryGetComponent(out ObjectScaleCurve scaleCurve))
                             {
                                 scaleCurve.timeMax = fuseDuration;
                             }
@@ -180,7 +183,7 @@ namespace SkillsPlusPlus.Modifiers {
                         diabloStrikeProjectileCatalogIndex = ProjectileCatalog.FindProjectileIndex("CaptainAirstrikeAltProjectile");
                     }
 
-                    if(di.inflictor && di.inflictor.TryGetComponent(out ProjectileController controller) && controller.catalogIndex == diabloStrikeProjectileCatalogIndex)
+                    if (di.inflictor && di.inflictor.TryGetComponent(out ProjectileController controller) && controller.catalogIndex == diabloStrikeProjectileCatalogIndex)
                     {
                         if (di.attacker && di.attacker.TryGetComponent(out CharacterBody attackerBody))
                         {
@@ -202,7 +205,7 @@ namespace SkillsPlusPlus.Modifiers {
         }
     }
 
-    [SkillLevelModifier(new string[] { 
+    [SkillLevelModifier(new string[] {
         "PrepSupplyDrop", 
         //"CaptainSkillUsedUp", 
         //"CaptainSupplyDropDepleted", 
@@ -211,32 +214,41 @@ namespace SkillsPlusPlus.Modifiers {
         //"CaptainSupplyDropEquipmentRestock",
         //"CaptainSupplyDropHacking"
     }, typeof(SetupSupplyDrop), typeof(DeployState), typeof(HealZoneMainState), typeof(ShockZoneMainState), typeof(HackingMainState), typeof(HackingInProgressState), typeof(EquipmentRestockMainState))]
-    class CaptainSupplyDropHealingSkillModifier : BaseSkillModifier {
+    internal class CaptainSupplyDropHealingSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
 
-            if(skillState is DeployState deploying) {
+            if (skillState is DeployState deploying)
+            {
                 var modelLocator = deploying.outer?.commonComponents.modelLocator;
-                if(modelLocator != null) {
+                if (modelLocator != null)
+                {
                     var indicatorTransform = modelLocator.modelTransform?.Find("Indicator");
-                    if(indicatorTransform != null) {
+                    if (indicatorTransform != null)
+                    {
                         indicatorTransform.localScale = Vector3.one * HackingMainState.baseRadius / 2;
-                        if(indicatorTransform.TryGetComponent(out ObjectScaleCurve objectScaleCurve)) {
+                        if (indicatorTransform.TryGetComponent(out ObjectScaleCurve objectScaleCurve))
+                        {
                             objectScaleCurve.baseScale = indicatorTransform.localScale;
                         }
                     }
                 }
             }
 
-            if(skillState is EquipmentRestockMainState equipmentRestock) {
+            if (skillState is EquipmentRestockMainState equipmentRestock)
+            {
                 equipmentRestock.activationCost = 100 / AdditiveScaling(3, 1, level);
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if(HealZoneMainState.healZonePrefab.TryGetComponent(out HealingWard healingWard)) {
+            if (HealZoneMainState.healZonePrefab.TryGetComponent(out HealingWard healingWard))
+            {
                 var healRadius = MultScaling(10, 0.2f, level);
                 healingWard.radius = healRadius;
             }
@@ -251,6 +263,6 @@ namespace SkillsPlusPlus.Modifiers {
                 warningZone.localScale = new Vector3(HackingMainState.baseRadius / 2, HackingMainState.baseRadius / 2, warningZone.localScale.z);
             }
         }
-        
+
     }
 }

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-
-using RoR2;
 using RoR2.UI;
-using RoR2.ConVar;
 using UnityEngine;
 
-namespace SkillsPlusPlus {
-    class SkillOptions {
+namespace SkillsPlusPlus
+{
+    internal class SkillOptions
+    {
 
         private static GameObject carouselPrefab;
         private static GameObject boolPrefab;
@@ -16,26 +14,33 @@ namespace SkillsPlusPlus {
         private static CarouselController multLinearScaleCarousel;
         private static CarouselController disableOnBuyCarousel;
 
-        internal static void SetupGameplayOptions() {
-            On.RoR2.UI.SettingsPanelController.Start += (orig, self) => {
+        internal static void SetupGameplayOptions()
+        {
+            On.RoR2.UI.SettingsPanelController.Start += (orig, self) =>
+            {
                 orig(self);
                 SettingsPanelControllerAwake(self);
             };
         }
-        private static void SettingsPanelControllerAwake(SettingsPanelController settingsPanelController) {
-            if(!levelsPerSkillPointCarousel) {
+        private static void SettingsPanelControllerAwake(SettingsPanelController settingsPanelController)
+        {
+            if (!levelsPerSkillPointCarousel)
+            {
 
-                if(settingsPanelController.name == "SettingsSubPanel, Gameplay") {
+                if (settingsPanelController.name == "SettingsSubPanel, Gameplay")
+                {
                     Logger.Debug("Got gameplay controller");
                     gameplaySettingsPanelTransform = settingsPanelController.GetComponentInChildren<BaseSettingsControl>(true).transform.parent;
                     var carouselControllers = settingsPanelController.transform.parent.GetComponentsInChildren<CarouselController>(true);
                     Logger.Debug(carouselControllers.Length);
-                    carouselPrefab = Array.Find(carouselControllers, carouselController => {
+                    carouselPrefab = Array.Find(carouselControllers, carouselController =>
+                    {
                         return carouselController.leftArrowButton != null || carouselController.rightArrowButton != null;
                     })?.gameObject;
                 }
 
-                if(gameplaySettingsPanelTransform != null && carouselPrefab != null) {
+                if (gameplaySettingsPanelTransform != null && carouselPrefab != null)
+                {
                     /*Logger.Debug("Adding option");
                     GameObject gameObject = GameObject.Instantiate(carouselPrefab, gameplaySettingsPanelTransform);
                     gameObject.name = "SettingsEntryButton, Carousel (Skills++)";
@@ -70,12 +75,13 @@ namespace SkillsPlusPlus {
                 }
             }
 
-            if(!multLinearScaleCarousel) { 
+            if (!multLinearScaleCarousel)
+            {
                 if (settingsPanelController.name == "SettingsSubPanel, Gameplay")
                 {
-                    foreach(BaseSettingsControl settings in settingsPanelController.settingsControllers)
+                    foreach (BaseSettingsControl settings in settingsPanelController.settingsControllers)
                     {
-                        if(settings.name.Contains(", Bool"))
+                        if (settings.name.Contains(", Bool"))
                         {
                             boolPrefab = settings.gameObject;
                             break;

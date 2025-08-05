@@ -1,17 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using UnityEngine;
-
-using SkillsPlusPlus.Modifiers;
-using RoR2;
-
-using EntityStates;
-using EntityStates.Seeker;
-
-using RoR2.Projectile;
-using RoR2.Skills;
-
-namespace SkillsPlusPlus.Source.Modifiers {
+﻿namespace SkillsPlusPlus.Source.Modifiers
+{
     /*[SkillLevelModifier("SeekerBodySpiritPunchCrosshair", typeof(SpiritPunch))]
     class SeekerPunchSkillModifier : BaseSkillModifier
     {

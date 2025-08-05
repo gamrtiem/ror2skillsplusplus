@@ -1,25 +1,21 @@
-using System;
-using System.Collections.Generic;
-
 using RoR2;
 using RoR2.Skills;
 
 using EntityStates;
 using EntityStates.Merc;
 using EntityStates.Merc.Weapon;
-using EntityStates.Commando.CommandoWeapon;
-using R2API.Utils;
 using UnityEngine;
 using RoR2.Projectile;
-using EntityStates.Engi.EngiMissilePainter;
-using SkillsPlusPlus.Util;
 
-namespace SkillsPlusPlus.Modifiers {
+namespace SkillsPlusPlus.Modifiers
+{
 
     [SkillLevelModifier("MercGroundLight", typeof(GroundLight))]
-    class GroundLightSkillModifier : SimpleSkillModifier<GroundLight> {
+    internal class GroundLightSkillModifier : SimpleSkillModifier<GroundLight>
+    {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             GroundLight.forceMagnitude = MultScaling(600, 0.20f, level);
             GroundLight.selfForceMagnitude = MultScaling(600, 0.20f, level);
@@ -32,9 +28,11 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("MercGroundLight2", typeof(GroundLight2))]
-    class GroundLight2SkillModifier : SimpleSkillModifier<GroundLight2> {
+    internal class GroundLight2SkillModifier : SimpleSkillModifier<GroundLight2>
+    {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
 
             // all swings in the combo fall under the same coefficients as of RoR2 1.0
@@ -44,7 +42,8 @@ namespace SkillsPlusPlus.Modifiers {
             GroundLight2.comboFinisherDamageCoefficient = MultScaling(1.3f, 0.2f, level);
         }
 
-        public override void OnSkillEnter(GroundLight2 skillState, int level) {
+        public override void OnSkillEnter(GroundLight2 skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
             Logger.Debug("damageCoefficient: {0}, baseDuration: {1}", skillState.damageCoefficient, skillState.baseDuration);
             skillState.baseDuration = MultScaling(0.6f, -.15f, level);
@@ -54,22 +53,29 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("MercBodyWhirlwind", typeof(WhirlwindEntry), typeof(WhirlwindGround), typeof(WhirlwindAir))]
-    class WhirlwindSkillModifier : BaseSkillModifier {
+    internal class WhirlwindSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
-            if(skillState is WhirlwindEntry) {
+            if (skillState is WhirlwindEntry)
+            {
                 WhirlwindEntry whirlwindEntry = (WhirlwindEntry)skillState;
-            } else if(skillState is WhirlwindBase) {
+            }
+            else if (skillState is WhirlwindBase)
+            {
                 WhirlwindBase whirlwindBase = (WhirlwindBase)skillState;
                 whirlwindBase.baseDamageCoefficient = MultScaling(whirlwindBase.baseDamageCoefficient, 0.25f, level);
                 whirlwindBase.selfForceMagnitude = MultScaling(whirlwindBase.selfForceMagnitude, 0.25f, level);
                 Transform modelTransform = whirlwindBase.outer?.commonComponents.modelLocator?.modelTransform;
-                if(modelTransform) {
+                if (modelTransform)
+                {
                     // Merc's model has a WhirlwindGround and WhirlwindAir gameobjects that contain the hit boxes as children for the whirlwind attacks
                     // finding the parenting gameobjects turns out to be a good way to increase the size of the hitboxes.
                     Transform whirlwindHitboxTransform = modelTransform.Find(whirlwindBase.hitboxString);
-                    if(whirlwindHitboxTransform) {
+                    if (whirlwindHitboxTransform)
+                    {
                         whirlwindHitboxTransform.localScale = Vector3.one * MultScaling(1, 0.25f, level);
                     }
                 }
@@ -79,9 +85,11 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("MercBodyUppercut", typeof(Uppercut))]
-    class UppercutSkillModifier : SimpleSkillModifier<Uppercut> {
+    internal class UppercutSkillModifier : SimpleSkillModifier<Uppercut>
+    {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             Uppercut.baseDamageCoefficient = MultScaling(5.5f, 0.25f, level);
             skillDef.baseMaxStock = (int)AdditiveScaling(1, 0.5f, level);
@@ -90,14 +98,17 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("MercBodyAssaulter", typeof(Assaulter))]
-    class AssaultSkillModifier : SimpleSkillModifier<Assaulter> {
+    internal class AssaultSkillModifier : SimpleSkillModifier<Assaulter>
+    {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
 
             Assaulter.damageCoefficient = MultScaling(3, 0.2f, level);
 
-            if(skillDef is MercDashSkillDef) {
+            if (skillDef is MercDashSkillDef)
+            {
                 MercDashSkillDef mercDashSkillDef = (MercDashSkillDef)skillDef;
                 mercDashSkillDef.timeoutDuration = AdditiveScaling(3, 0.5f, level);
             }
@@ -106,12 +117,13 @@ namespace SkillsPlusPlus.Modifiers {
     }
 
     [SkillLevelModifier("MercBodyFocusedAssault", typeof(FocusedAssaultDash))]
-    class Assault2SkillModifier : SimpleSkillModifier<FocusedAssaultDash> {
+    internal class Assault2SkillModifier : SimpleSkillModifier<FocusedAssaultDash>
+    {
+        private Transform assaultHitbox;
+        private Vector3 originalHitboxScale;
 
-        Transform assaultHitbox;
-        Vector3 originalHitboxScale;
-
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
 
             if (!assaultHitbox)
@@ -153,24 +165,33 @@ namespace SkillsPlusPlus.Modifiers {
 
     // both Mercenary special skills have the same skill name
     [SkillLevelModifier(new string[] { "MercBodyEvis", "MercBodyEvisProjectile", "Gale-Force" }, typeof(Evis), typeof(EvisDash), typeof(ThrowEvisProjectile))]
-    class EviscerateSkillModifier : BaseSkillModifier {
+    internal class EviscerateSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
-            if(skillState is Evis) {
+            if (skillState is Evis)
+            {
                 this.OnEvisEnter((Evis)skillState, level);
-            } else if (skillState is ThrowEvisProjectile) {
+            }
+            else if (skillState is ThrowEvisProjectile)
+            {
                 this.OnThrowEvisProjectileEnter((ThrowEvisProjectile)skillState, level);
             }
         }
 
-        private void OnEvisEnter(Evis evis, int level) {
+        private void OnEvisEnter(Evis evis, int level)
+        {
             // evis.
         }
 
-        private void OnThrowEvisProjectileEnter(ThrowEvisProjectile throwEvisProjectile, int level) {
-            if(throwEvisProjectile.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion)) {
-                if(projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileOverlapAttack projectileOverlapAttack)) {
+        private void OnThrowEvisProjectileEnter(ThrowEvisProjectile throwEvisProjectile, int level)
+        {
+            if (throwEvisProjectile.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
+            {
+                if (projectileImpactExplosion.childrenProjectilePrefab.TryGetComponent(out ProjectileOverlapAttack projectileOverlapAttack))
+                {
                     float fireFrequency = MultScaling(8f, 0.20f, level);
                     projectileOverlapAttack.damageCoefficient = MultScaling(1, 0.20f, level);
                     projectileOverlapAttack.fireFrequency = fireFrequency;
@@ -179,13 +200,17 @@ namespace SkillsPlusPlus.Modifiers {
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if(skillDef.activationState.stateType == typeof(EvisDash)) {
+            if (skillDef.activationState.stateType == typeof(EvisDash))
+            {
                 Evis.maxRadius = MultScaling(16, 0.3f, level);
                 Evis.damageFrequency = MultScaling(7, 0.15f, level);
                 Evis.procCoefficient = MultScaling(1, 0.1f, level);
-            } else if (skillDef.activationState.stateType == typeof(ThrowEvisProjectile)){
+            }
+            else if (skillDef.activationState.stateType == typeof(ThrowEvisProjectile))
+            {
 
             }
         }
