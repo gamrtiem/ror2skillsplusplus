@@ -43,7 +43,8 @@ namespace SkillsPlusPlus.Modifiers
         /// <inheritdoc/>
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
-            Logger.Debug("OnSkillLeveledUp({0}, {1}, {2})", level, characterBody, skillDef);
+            //also very log heavy in debug
+            //Logger.Debug("OnSkillLeveledUp({0}, {1}, {2})", level, characterBody, skillDef);
             FindSkillUpgrade(characterBody, "blank", true);
             // no-op
         }

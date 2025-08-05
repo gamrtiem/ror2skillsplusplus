@@ -100,13 +100,17 @@ namespace SkillsPlusPlus
                 Logger.Debug("Couldn't refresh upgrades because the survivor is disabled. targetBaseSkillName: {0}", targetBaseSkillName);
                 return;
             };
+            
             var activeSkillDef = GetActiveSkillDef(targetGenericSkill);
             if (activeSkillDef == null)
             {
                 Logger.Debug("Couldn't refresh upgrades because there is no active skill. targetBaseSkillName: {0}", targetBaseSkillName);
                 return;
             }
-            Logger.Debug("RefreshUpgrades() activeSkillDef: {0}", ((ScriptableObject)activeSkillDef)?.name);
+            
+            //this is very log heavy when debugging; uncomment when trying to get new character skilldef names
+            //Logger.Debug("RefreshUpgrades() activeSkillDef: {0}", ((ScriptableObject)activeSkillDef)?.name);
+            
             var modifier = SkillModifierManager.GetSkillModifier(activeSkillDef);
             if (modifier != null)
             {
@@ -177,7 +181,8 @@ namespace SkillsPlusPlus
                     }
 
                     if (bLogging) Logger.Debug(state.GetType().Name + ": Found CharacterBody, returning " + characterBody.GetDisplayName());
-                    RefreshUpgrades(); // kinda a hacky way to do it ? idk it works and 4 am <3 
+                    if(state.GetType().Name != ("GenericCharacterPod")) //prevents refreshupgrades getting called alot in droppods which is a bit log heavy
+                        RefreshUpgrades(); // fixes issue with stuff like engie drone stocks not carrying across stages 
                     return characterBody;
                 }
                 else if (state.outer.TryGetComponent(out ProjectileController projectileController) && projectileController.owner)

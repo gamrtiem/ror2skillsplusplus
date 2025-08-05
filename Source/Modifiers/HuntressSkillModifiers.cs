@@ -16,7 +16,6 @@ namespace SkillsPlusPlus.Modifiers
     [SkillLevelModifier("HuntressBodyFireSeekingArrow", typeof(FireSeekingArrow))]
     internal class HuntressSeekingArrowSkillModifier : SimpleSkillModifier<FireSeekingArrow>
     {
-
         public override void OnSkillEnter(FireSeekingArrow skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
@@ -42,7 +41,6 @@ namespace SkillsPlusPlus.Modifiers
     [SkillLevelModifier("FireFlurrySeekingArrow", typeof(FireFlurrySeekingArrow))]
     internal class HuntressFlurrySkillModifier : SimpleSkillModifier<FireFlurrySeekingArrow>
     {
-
         public override void OnSkillEnter(FireFlurrySeekingArrow skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
@@ -74,7 +72,6 @@ namespace SkillsPlusPlus.Modifiers
     [SkillLevelModifier("HuntressBodyGlaive", typeof(ThrowGlaive))]
     internal class HuntressGlaiveSkillModifier : SimpleSkillModifier<ThrowGlaive>
     {
-
         static HuntressGlaiveSkillModifier()
         {
             // R2API.LanguageAPI.Add("HUNTRESS_SECONDARY_DESCRIPTION", "Throw a seeking glaive that bounces up to <style=cIsDamage>6 (+2)</style> times for <style=cIsDamage>250% damage</style>. Damage increases by <style=cIsDamage>10% (+2.5%)</style> per bounce.");
@@ -93,10 +90,9 @@ namespace SkillsPlusPlus.Modifiers
 
     }
 
-    [SkillLevelModifier(new string[] { "HuntressBodyBlink", "HuntressBodyMiniBlink" }, typeof(BlinkState), typeof(MiniBlinkState))]
+    [SkillLevelModifier(new[] { "HuntressBodyBlink", "HuntressBodyMiniBlink" }, typeof(BlinkState), typeof(MiniBlinkState))]
     internal class HuntressBlinkSkillModifier : BaseSkillModifier
     {
-
         public override void OnSkillExit(BaseState skillState, int level)
         {
             base.OnSkillExit(skillState, level);
@@ -112,10 +108,9 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier(new string[] { "HuntressBodyArrowRain", "Burning Rain" }, typeof(ArrowRain))]
+    [SkillLevelModifier(new[] { "HuntressBodyArrowRain", "Burning Rain" }, typeof(ArrowRain))]
     internal class HuntressArrowRainSkillModifier : SimpleSkillModifier<ArrowRain>
     {
-
         static HuntressArrowRainSkillModifier()
         {
             // R2API.LanguageAPI.Add("HUNTRESS_SPECIAL_DESCRIPTION", "<style=cIsUtility>Teleport</style> into the sky. Target a <style=cIsDamage>7.5 unit (+2.5)</style> radius area to rain arrows, <style=cIsUtility>slowing</style> all enemies and dealing <style=cIsDamage>225% (+%25) damage per second</style>.");
@@ -133,7 +128,7 @@ namespace SkillsPlusPlus.Modifiers
 
     }
 
-    [SkillLevelModifier(new string[] { "AimArrowSnipe", "Rabauld" }, typeof(BeginArrowSnipe), typeof(FireArrowSnipe), typeof(AimArrowSnipe))]
+    [SkillLevelModifier(new[] { "AimArrowSnipe", "Rabauld" }, typeof(BeginArrowSnipe), typeof(FireArrowSnipe), typeof(AimArrowSnipe))]
     internal class HuntressSnipeSkillModifier : BaseSkillModifier
     {
         private static readonly float stockImageInterspacing = 18.0f;

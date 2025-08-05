@@ -231,7 +231,7 @@ namespace SkillsPlusPlus
         public void OnLevelChanged()
         {
             int characterLevel = (int)TeamManager.instance.GetTeamLevel(this.PlayerTeamIndex);
-            // Logger.Debug("OnLevelChanged({0}) for team {1}", characterLevel, PlayerTeamIndex);
+            //Logger.Warn("OnLevelChanged({0}) for team {1}", characterLevel, PlayerTeamIndex);
             if (this.PlayerTeamIndex == TeamIndex.None)
             {
                 return;

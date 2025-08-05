@@ -170,7 +170,7 @@ namespace SkillsPlusPlus.Modifiers
 
             public static void LunarDetonatorPassiveAttachment_OnDamageDealt(On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.orig_OnDamageDealtServer orig, MonoBehaviour self, DamageReport damageReport)
             {
-                orig.Invoke(self, damageReport);
+                orig.Invoke((LunarDetonatorPassiveAttachment.DamageListener)self, damageReport);
 
                 float rollValue = damageReport.damageInfo.procCoefficient * (((heartSkill ? heartSkill.skillLevel : 0) * 0.20f));
 

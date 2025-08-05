@@ -10,6 +10,7 @@ using RoR2.UI;
 using SkillsPlusPlus.Modifiers;
 using SkillsPlusPlus.UI;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace SkillsPlusPlus
 {
@@ -29,11 +30,24 @@ namespace SkillsPlusPlus
             //  \___ \ | |/ /| || || |/ __||_   _||_   _|
             //  ____) ||   < | || || |\__ \  |_|    |_|
             // |_____/ |_|\_\|_||_||_||___/
+#if DEBUG
+            //enable logger.debug for debug
+            SkillsPlusPlus.Logger.LOG_LEVEL = SkillsPlusPlus.Logger.LogLevel.Debug;
+            UnityEngine.Networking.LogFilter.currentLogLevel = LogFilter.Debug;
 
+            //unlock all for debug
+            On.RoR2.Stats.StatSheet.HasUnlockable += (orig, self, def) =>
+            {
+                return true;
+            };
+#endif
 
             Instance = this;
 
-
+            //this is required to ensure that you can actually upgrade skills .,.,
+            GameObject playerMasterPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/CommandoMaster");
+            playerMasterPrefab.EnsureComponent<SkillPointsController>();
+            
             SkillModifierManager.LoadSkillModifiers();
             SkillOptions.SetupGameplayOptions();
 
@@ -62,21 +76,20 @@ namespace SkillsPlusPlus
         {
             var row = orig(owner, bodyIndex, skillSlotIndex, skillSlot);
 
-            if (row != null)
-            {
-                var buttons = row.rowData;
+            if (row == null) return null;
+                
+            var buttons = row.rowData;
 
-                for (int i = 0; i < buttons.Count; i++)
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                SkillsPlusPlus.Logger.Debug("Ensuring SkillsPlusPlusTooltipProvider({0})", i);
+                var button = buttons[i];
+                var skillDef = skillSlot?.skillFamily?.variants[i].skillDef;
+                if (skillDef != null)
                 {
-                    SkillsPlusPlus.Logger.Debug("Ensuring SkillsPlusPlusTooltipProvider({0})", i);
-                    var button = buttons[i];
-                    var skillDef = skillSlot?.skillFamily?.variants[i].skillDef;
-                    if (skillDef != null)
-                    {
-                        var provider = button.button.gameObject.EnsureComponent<SkillUpgradeTooltipProvider>();
-                        provider.skillName = ((ScriptableObject)skillDef)?.name;
-                        SkillsPlusPlus.Logger.Debug(((ScriptableObject)skillDef)?.name);
-                    }
+                    var provider = button.button.gameObject.EnsureComponent<SkillUpgradeTooltipProvider>();
+                    provider.skillName = ((ScriptableObject)skillDef)?.name;
+                    SkillsPlusPlus.Logger.Debug(((ScriptableObject)skillDef)?.name);
                 }
             }
 

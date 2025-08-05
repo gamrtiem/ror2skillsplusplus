@@ -153,7 +153,7 @@ namespace SkillsPlusPlus.Modifiers
 
     }
 
-    [SkillLevelModifier(new string[] { "ChargeFist", "Megaton Punch" }, typeof(ChargeFist), typeof(SwingChargedFist))]
+    [SkillLevelModifier(new[] { "ChargeFist", "Megaton Punch" }, typeof(ChargeFist), typeof(SwingChargedFist))]
     internal class LoaderChargeFistSkillModifier : BaseSkillModifier
     {
 
@@ -183,7 +183,7 @@ namespace SkillsPlusPlus.Modifiers
 
     }
 
-    [SkillLevelModifier(new string[] { "ChargeZapFist", "Thundercrash" }, typeof(ChargeZapFist), typeof(SwingZapFist))]
+    [SkillLevelModifier(new[] { "ChargeZapFist", "Thundercrash" }, typeof(ChargeZapFist), typeof(SwingZapFist))]
     internal class LoaderChargeZapFistSkillModifier : BaseSkillModifier
     {
 

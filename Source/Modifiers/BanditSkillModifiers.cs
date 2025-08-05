@@ -10,17 +10,14 @@ using static R2API.RecalculateStatsAPI;
 
 namespace SkillsPlusPlus.Modifiers
 {
-    [SkillLevelModifier("FireShotgun2", new Type[]
-        {
-        typeof(FireShotgun2)
-        })]
+    [SkillLevelModifier("FireShotgun2", typeof(FireShotgun2))]
     internal class BanditFireShotgunSkillModifier : SimpleSkillModifier<FireShotgun2>
     {
         public override void OnSkillEnter(FireShotgun2 skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
 
-            skillState.bulletCount = skillState.bulletCount + level;
+            skillState.bulletCount += level;
             skillState.damageCoefficient = MultScaling(skillState.damageCoefficient, 0.05f, level);
 
             skillState.minFixedSpreadYaw += level * 0.5f;
@@ -28,10 +25,7 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("Bandit2Blast", new Type[]
-        {
-        typeof(Bandit2FireRifle)
-        })]
+    [SkillLevelModifier("Bandit2Blast", typeof(Bandit2FireRifle))]
     internal class BanditFireRifleSkillModifier : SimpleSkillModifier<Bandit2FireRifle>
     {
         private float baseBloom = 0;
@@ -54,10 +48,7 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("SlashBlade", new Type[]
-    {
-    typeof(SlashBlade)
-    })]
+    [SkillLevelModifier("SlashBlade", typeof(SlashBlade))]
     internal class BanditBladeSkillModifier : SimpleSkillModifier<SlashBlade>
     {
         private Vector3 originalHitboxScale = Vector3.zero;
@@ -95,10 +86,7 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("Bandit2SerratedShivs", new Type[]
-        {
-        typeof(Bandit2FireShiv)
-        })]
+    [SkillLevelModifier("Bandit2SerratedShivs", typeof(Bandit2FireShiv))]
     internal class BanditFireShivSkillModifier : SimpleSkillModifier<Bandit2FireShiv>
     {
         public override void OnSkillEnter(Bandit2FireShiv skillState, int level)
@@ -115,10 +103,7 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("ThrowSmokebomb", new Type[]
-        {
-        typeof(ThrowSmokebomb)
-        })]
+    [SkillLevelModifier("ThrowSmokebomb", typeof(ThrowSmokebomb))]
     internal class BanditSkillThrowSmokebombModifier : SimpleSkillModifier<ThrowSmokebomb>
     {
         private static float baseRadius = 0;
@@ -188,10 +173,7 @@ namespace SkillsPlusPlus.Modifiers
     }
 
 
-    [SkillLevelModifier("ResetRevolver", new Type[]
-        {
-        typeof(FireSidearmResetRevolver)
-        })]
+    [SkillLevelModifier("ResetRevolver", typeof(FireSidearmResetRevolver))]
     internal class BanditSkillResetRevolverModifier : SimpleSkillModifier<FireSidearmResetRevolver>
     {
         private static SkillUpgrade resetSkill;
@@ -241,10 +223,7 @@ namespace SkillsPlusPlus.Modifiers
     }
 
 
-    [SkillLevelModifier("SkullRevolver", new Type[]
-        {
-        typeof(FireSidearmSkullRevolver)
-        })]
+    [SkillLevelModifier("SkullRevolver", typeof(FireSidearmSkullRevolver))]
     internal class BanditSkillSkullRevolverModifier : SimpleSkillModifier<FireSidearmSkullRevolver>
     {
         private static SkillUpgrade revolverSkill;
