@@ -1,6 +1,8 @@
 ﻿using System;
+using ExtraSkillSlots;
 using RoR2.UI;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace SkillsPlusPlus
 {
@@ -13,6 +15,7 @@ namespace SkillsPlusPlus
         private static CarouselController levelsPerSkillPointCarousel;
         private static CarouselController multLinearScaleCarousel;
         private static CarouselController disableOnBuyCarousel;
+        private static InputBindingControl inputBindingControl;
 
         internal static void SetupGameplayOptions()
         {
@@ -24,6 +27,19 @@ namespace SkillsPlusPlus
         }
         private static void SettingsPanelControllerAwake(SettingsPanelController settingsPanelController)
         {
+            Logger.Debug(settingsPanelController.name);
+            if (settingsPanelController.name == "SettingsSubPanel, Controls (M&KB)" || settingsPanelController.name == "SettingsSubPanel, Controls (Gamepad)")
+            {
+                var jumpBindingTransform = settingsPanelController.transform.Find("Scroll View/Viewport/VerticalLayout/SettingsEntryButton, Binding (Jump)");
+
+                var inputBindingObject = Object.Instantiate(jumpBindingTransform, jumpBindingTransform.parent);
+                var inputBindingControl = inputBindingObject.GetComponent<InputBindingControl>();
+                inputBindingControl.actionName = "SPPHOTKEY";
+                inputBindingControl.Awake();
+                Logger.Debug("added option !!");
+                
+            }
+            
             if (!levelsPerSkillPointCarousel)
             {
 
@@ -102,6 +118,11 @@ namespace SkillsPlusPlus
 
                     multLinearScaleCarousel.enabled = false;
                     multLinearScaleCarousel.enabled = true;
+                    
+                    
+                    GameObject gameObject2 = GameObject.Instantiate(boolPrefab, gameplaySettingsPanelTransform);
+                    gameObject2.name = "SettingsEntryButton, Bool (LinearSkill - Skills++)";
+                    inputBindingControl = gameObject2.GetComponent<InputBindingControl>();
                 }
             }
 

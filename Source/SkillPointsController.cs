@@ -144,7 +144,7 @@ namespace SkillsPlusPlus
             if (this.isSurvivorEnabled && this.body != null && self.outer.commonComponents.characterBody == this.body)
             {
                 Player inputPlayer = this.playerCharacterMasterController?.networkUser?.localUser?.inputPlayer;
-                if (inputPlayer != null && ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() && ConVars.ConVars.disableOnBuy.value && unspentSkillPoints > 0)
+                if (inputPlayer != null && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillsPlugin.hotkey.ActionId)) && ConVars.ConVars.disableOnBuy.value && unspentSkillPoints > 0)
                 {
                     return false;
                 }

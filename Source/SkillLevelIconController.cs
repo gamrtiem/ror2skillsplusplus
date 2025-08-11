@@ -185,8 +185,8 @@ namespace SkillsPlusPlus
                                     skillAction = RewiredConsts.Action.SpecialSkill;
                                     break;
                             }
-                            UpgradeButton.SetActive(canBuySkill && ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(RewiredConsts.Action.Info));
-                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive()))
+                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillsPlugin.hotkey.ActionId)) || inputPlayer.GetButton(RewiredConsts.Action.Info));
+                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillsPlugin.hotkey.ActionId)))
                             {
                                 this.OnBuySkill();
                             }

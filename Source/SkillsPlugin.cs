@@ -1,3 +1,4 @@
+using System;
 using BepInEx;
 using BepInEx.Configuration;
 using R2API.Utils;
@@ -12,6 +13,14 @@ using SkillsPlusPlus.UI;
 using UnityEngine;
 using UnityEngine.Networking;
 
+using ExtraSkillSlots;
+using Rewired;
+using Rewired.Data;
+using System.Linq;
+using System.Reflection;
+using MonoMod.RuntimeDetour;
+using Rewired.Data.Mapping;
+
 namespace SkillsPlusPlus
 {
     [BepInDependency(R2API.R2API.PluginGUID)]
@@ -21,6 +30,7 @@ namespace SkillsPlusPlus
     public sealed class SkillsPlugin : BaseUnityPlugin
     {
         private static SkillsPlugin Instance = null;
+        public static RewiredAction hotkey { get; set; }
 
         private void Awake()
         {
@@ -48,6 +58,18 @@ namespace SkillsPlusPlus
             GameObject playerMasterPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/CommandoMaster");
             playerMasterPrefab.EnsureComponent<SkillPointsController>();
             
+            hotkey = new RewiredAction
+            {
+                ActionId = 400,
+                Name = "SPPHOTKEY",
+                DisplayToken = "SPPHOTKEY",
+                DefaultKeyboardKey = KeyboardKeyCode.Alpha1,
+                DefaultJoystickKey = 16
+            };
+            InputCatalog.actionToToken[hotkey] = "SPPHOTKEY";
+            var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
+            new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
+            
             SkillModifierManager.LoadSkillModifiers();
             SkillOptions.SetupGameplayOptions();
 
@@ -59,6 +81,30 @@ namespace SkillsPlusPlus
             On.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += Row_FromSkillSlot;
 
             InitConfig();
+        }
+        private static void FillActionMaps(RewiredAction action, ControllerMap_Editor keyboardMap, ControllerMap_Editor joystickMap)
+        {
+            if (joystickMap != null && joystickMap.actionElementMaps.All(map => map.actionId != action.ActionId))
+            {
+                joystickMap.actionElementMaps.Add(action.DefaultJoystickMap);
+            }
+
+            if (keyboardMap != null && keyboardMap.actionElementMaps.All(map => map.actionId != action.ActionId))
+            {
+                keyboardMap.actionElementMaps.Add(action.DefaultKeyboardMap);
+            }
+        }
+        
+        internal static void AddCustomActions(Action<UserData> orig, UserData self)
+        {
+            self.actions?.Add(hotkey);
+
+            var joystickMap = self.joystickMaps?.FirstOrDefault();
+            var keyboardMap = self.keyboardMaps?.FirstOrDefault();
+            
+            FillActionMaps(hotkey, keyboardMap, joystickMap);
+
+            orig(self);
         }
 
         private static void TooltipController_SetTooltipProvider(On.RoR2.UI.TooltipController.orig_SetTooltipProvider orig, TooltipController self, TooltipProvider provider)

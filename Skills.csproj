@@ -79,6 +79,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ExtraSkillSlots">
+      <HintPath>libs\KingEnderBrine-ExtraSkillSlots-1.6.2\plugins\ExtraSkillSlots\ExtraSkillSlots.dll</HintPath>
+    </Reference>
+  </ItemGroup>
   <!--Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="IF &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (&#xD;&#xA;del /Q &quot;$(TargetDir)$(TargetName).zip&quot;&#xD;&#xA;)" />
   </Target-->
