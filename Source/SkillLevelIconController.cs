@@ -27,7 +27,7 @@ namespace SkillsPlusPlus
         private void Awake()
         {
             this.skillIcon = GetComponent<SkillIcon>();
-
+            
             this.CanBuyPanel = Instantiate(skillIcon.isReadyPanelObject, skillIcon.transform);
             this.CanBuyPanel.name = "CanBuyBorderPanel";
             CanBuyPanel.transform.SetSiblingIndex(1);
@@ -185,8 +185,8 @@ namespace SkillsPlusPlus
                                     skillAction = RewiredConsts.Action.SpecialSkill;
                                     break;
                             }
-                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillsPlugin.hotkey.ActionId)) || inputPlayer.GetButton(RewiredConsts.Action.Info));
-                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillsPlugin.hotkey.ActionId)))
+                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillOptions.hotkey.ActionId)) || inputPlayer.GetButton(RewiredConsts.Action.Info));
+                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillOptions.hotkey.ActionId)))
                             {
                                 this.OnBuySkill();
                             }

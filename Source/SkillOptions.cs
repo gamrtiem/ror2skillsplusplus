@@ -1,5 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using ExtraSkillSlots;
+using MonoMod.RuntimeDetour;
+using Rewired;
+using Rewired.Data;
+using Rewired.Data.Mapping;
+using RoR2;
 using RoR2.UI;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -8,22 +15,47 @@ namespace SkillsPlusPlus
 {
     internal class SkillOptions
     {
-
-        private static GameObject carouselPrefab;
-        private static GameObject boolPrefab;
-        private static Transform gameplaySettingsPanelTransform;
-        private static CarouselController levelsPerSkillPointCarousel;
-        private static CarouselController multLinearScaleCarousel;
-        private static CarouselController disableOnBuyCarousel;
-        private static InputBindingControl inputBindingControl;
-
+        public static RewiredAction hotkey { get; set; }
         internal static void SetupGameplayOptions()
         {
+            hotkey = new RewiredAction
+            {
+                ActionId = 400,
+                Name = "SKILLS_GAMEPAD_BUY_BTN",
+                DisplayToken = "SKILLS_GAMEPAD_BUY_BTN",
+                DefaultKeyboardKey = KeyboardKeyCode.None,
+                DefaultJoystickKey = 16
+            };
+            InputCatalog.actionToToken[hotkey] = "SKILLS_GAMEPAD_BUY_BTN";
+            var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
+            new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
+            
             On.RoR2.UI.SettingsPanelController.Start += (orig, self) =>
             {
                 orig(self);
                 SettingsPanelControllerAwake(self);
             };
+        }
+        
+        //taken from extra skill slots sorr y!!!!
+        internal static void AddCustomActions(Action<UserData> orig, UserData self)
+        {
+            self.actions?.Add(hotkey);
+
+            var joystickMap = self.joystickMaps?.FirstOrDefault();
+            var keyboardMap = self.keyboardMaps?.FirstOrDefault();
+            
+            if (joystickMap != null && joystickMap.actionElementMaps.All(map => map.actionId != hotkey.ActionId))
+            {
+                joystickMap.actionElementMaps.Add(hotkey.DefaultJoystickMap);
+            }
+
+            if (keyboardMap != null && keyboardMap.actionElementMaps.All(map => map.actionId != hotkey.ActionId))
+            {
+                keyboardMap.actionElementMaps.Add(hotkey.DefaultKeyboardMap);
+            }
+
+            orig(self);
         }
         private static void SettingsPanelControllerAwake(SettingsPanelController settingsPanelController)
         {
@@ -31,118 +63,12 @@ namespace SkillsPlusPlus
             if (settingsPanelController.name == "SettingsSubPanel, Controls (M&KB)" || settingsPanelController.name == "SettingsSubPanel, Controls (Gamepad)")
             {
                 var jumpBindingTransform = settingsPanelController.transform.Find("Scroll View/Viewport/VerticalLayout/SettingsEntryButton, Binding (Jump)");
-
                 var inputBindingObject = Object.Instantiate(jumpBindingTransform, jumpBindingTransform.parent);
                 var inputBindingControl = inputBindingObject.GetComponent<InputBindingControl>();
-                inputBindingControl.actionName = "SPPHOTKEY";
+                
+                inputBindingControl.actionName = "SKILLS_GAMEPAD_BUY_BTN";
                 inputBindingControl.Awake();
                 Logger.Debug("added option !!");
-                
-            }
-            
-            if (!levelsPerSkillPointCarousel)
-            {
-
-                if (settingsPanelController.name == "SettingsSubPanel, Gameplay")
-                {
-                    Logger.Debug("Got gameplay controller");
-                    gameplaySettingsPanelTransform = settingsPanelController.GetComponentInChildren<BaseSettingsControl>(true).transform.parent;
-                    var carouselControllers = settingsPanelController.transform.parent.GetComponentsInChildren<CarouselController>(true);
-                    Logger.Debug(carouselControllers.Length);
-                    carouselPrefab = Array.Find(carouselControllers, carouselController =>
-                    {
-                        return carouselController.leftArrowButton != null || carouselController.rightArrowButton != null;
-                    })?.gameObject;
-                }
-
-                if (gameplaySettingsPanelTransform != null && carouselPrefab != null)
-                {
-                    /*Logger.Debug("Adding option");
-                    GameObject gameObject = GameObject.Instantiate(carouselPrefab, gameplaySettingsPanelTransform);
-                    gameObject.name = "SettingsEntryButton, Carousel (Skills++)";
-                    levelsPerSkillPointCarousel = gameObject.GetComponent<CarouselController>();
-                    levelsPerSkillPointCarousel.forceValidChoice = false;
-                    levelsPerSkillPointCarousel.settingSource = BaseSettingsControl.SettingSource.ConVar;
-                    levelsPerSkillPointCarousel.settingName = ConVars.ConVars.levelsPerSkillPoint.name;
-                    levelsPerSkillPointCarousel.nameToken = "LEVELS_PER_SKILLPOINT";
-                    levelsPerSkillPointCarousel.nameLabel.token = "LEVELS_PER_SKILLPOINT";
-                    levelsPerSkillPointCarousel.GetComponent<HGButton>().hoverToken = ConVars.ConVars.levelsPerSkillPoint.helpText;
-
-                    var choices = new List<CarouselController.Choice>();
-
-                    for(int i = ConVars.ConVars.levelsPerSkillPoint.minValue; i <= ConVars.ConVars.levelsPerSkillPoint.maxValue; i++) {
-                        choices.Add(new CarouselController.Choice() {
-                            convarValue = "" + i,
-                            suboptionDisplayToken = "" + i
-                        }) ;
-                    }
-
-                    levelsPerSkillPointCarousel.choices = choices.ToArray();
-
-                    // triggers a OnEnable call that will revalidate the controls
-                    levelsPerSkillPointCarousel.enabled = false;
-                    levelsPerSkillPointCarousel.enabled = true;*/
-
-
-                    //HGButton button = buySkillsOptionGameObject.GetComponent<HGButton>();
-                    //button.hoverToken = UI_HOVER_TOKEN;
-                    //button.interactable = SkillInput.isControllerSupported;
-                    //inputBindingControl.button.enabled = SkillInput.isControllerSupported;
-                }
-            }
-
-            if (!multLinearScaleCarousel)
-            {
-                if (settingsPanelController.name == "SettingsSubPanel, Gameplay")
-                {
-                    foreach (BaseSettingsControl settings in settingsPanelController.settingsControllers)
-                    {
-                        if (settings.name.Contains(", Bool"))
-                        {
-                            boolPrefab = settings.gameObject;
-                            break;
-                        }
-                    }
-                }
-                if (boolPrefab)
-                {
-                    GameObject gameObject1 = GameObject.Instantiate(boolPrefab, gameplaySettingsPanelTransform);
-                    gameObject1.name = "SettingsEntryButton, Bool (LinearSkill - Skills++)";
-                    multLinearScaleCarousel = gameObject1.GetComponent<CarouselController>();
-                    multLinearScaleCarousel.forceValidChoice = false;
-                    multLinearScaleCarousel.settingSource = BaseSettingsControl.SettingSource.ConVar;
-                    multLinearScaleCarousel.settingName = ConVars.ConVars.multScalingLinear.name;
-                    multLinearScaleCarousel.nameToken = "MULT_SCALING_LINEAR";
-                    multLinearScaleCarousel.nameLabel.token = "MULT_SCALING_LINEAR";
-                    multLinearScaleCarousel.GetComponent<HGButton>().hoverToken = ConVars.ConVars.multScalingLinear.helpText;
-
-                    multLinearScaleCarousel.enabled = false;
-                    multLinearScaleCarousel.enabled = true;
-                    
-                    
-                    GameObject gameObject2 = GameObject.Instantiate(boolPrefab, gameplaySettingsPanelTransform);
-                    gameObject2.name = "SettingsEntryButton, Bool (LinearSkill - Skills++)";
-                    inputBindingControl = gameObject2.GetComponent<InputBindingControl>();
-                }
-            }
-
-            if (!disableOnBuyCarousel)
-            {
-                if (boolPrefab)
-                {
-                    GameObject gameObject1 = GameObject.Instantiate(boolPrefab, gameplaySettingsPanelTransform);
-                    gameObject1.name = "SettingsEntryButton, Bool (DisableOnBuy - Skills++)";
-                    disableOnBuyCarousel = gameObject1.GetComponent<CarouselController>();
-                    disableOnBuyCarousel.forceValidChoice = false;
-                    disableOnBuyCarousel.settingSource = BaseSettingsControl.SettingSource.ConVar;
-                    disableOnBuyCarousel.settingName = ConVars.ConVars.disableOnBuy.name;
-                    disableOnBuyCarousel.nameToken = "DISABLE_SKILL_BUY_INPUT";
-                    disableOnBuyCarousel.nameLabel.token = "DISABLE_SKILL_BUY_INPUT";
-                    disableOnBuyCarousel.GetComponent<HGButton>().hoverToken = ConVars.ConVars.disableOnBuy.helpText;
-
-                    disableOnBuyCarousel.enabled = false;
-                    disableOnBuyCarousel.enabled = true;
-                }
             }
         }
     }

@@ -30,7 +30,6 @@ namespace SkillsPlusPlus
     public sealed class SkillsPlugin : BaseUnityPlugin
     {
         private static SkillsPlugin Instance = null;
-        public static RewiredAction hotkey { get; set; }
 
         private void Awake()
         {
@@ -58,17 +57,8 @@ namespace SkillsPlusPlus
             GameObject playerMasterPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/CommandoMaster");
             playerMasterPrefab.EnsureComponent<SkillPointsController>();
             
-            hotkey = new RewiredAction
-            {
-                ActionId = 400,
-                Name = "SPPHOTKEY",
-                DisplayToken = "SPPHOTKEY",
-                DefaultKeyboardKey = KeyboardKeyCode.Alpha1,
-                DefaultJoystickKey = 16
-            };
-            InputCatalog.actionToToken[hotkey] = "SPPHOTKEY";
-            var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
-            new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
+            //ensure hotkeys are properly setup 
+            
             
             SkillModifierManager.LoadSkillModifiers();
             SkillOptions.SetupGameplayOptions();
@@ -81,30 +71,6 @@ namespace SkillsPlusPlus
             On.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += Row_FromSkillSlot;
 
             InitConfig();
-        }
-        private static void FillActionMaps(RewiredAction action, ControllerMap_Editor keyboardMap, ControllerMap_Editor joystickMap)
-        {
-            if (joystickMap != null && joystickMap.actionElementMaps.All(map => map.actionId != action.ActionId))
-            {
-                joystickMap.actionElementMaps.Add(action.DefaultJoystickMap);
-            }
-
-            if (keyboardMap != null && keyboardMap.actionElementMaps.All(map => map.actionId != action.ActionId))
-            {
-                keyboardMap.actionElementMaps.Add(action.DefaultKeyboardMap);
-            }
-        }
-        
-        internal static void AddCustomActions(Action<UserData> orig, UserData self)
-        {
-            self.actions?.Add(hotkey);
-
-            var joystickMap = self.joystickMaps?.FirstOrDefault();
-            var keyboardMap = self.keyboardMaps?.FirstOrDefault();
-            
-            FillActionMaps(hotkey, keyboardMap, joystickMap);
-
-            orig(self);
         }
 
         private static void TooltipController_SetTooltipProvider(On.RoR2.UI.TooltipController.orig_SetTooltipProvider orig, TooltipController self, TooltipProvider provider)
@@ -160,19 +126,6 @@ namespace SkillsPlusPlus
                     min = 1,
                     FormatString = "{0:0}"
                 }));
-            }
-
-            {
-                var skillActionName = Config.Bind("Skills++",
-                    "Keybind to upgrade skills",
-                    KeyboardShortcut.Empty,
-                    "Key to upgrade skills. When a skill is available to be upgraded, holding the key down and pressing the associated skill key will upgrade the skill.");
-
-                skillActionName.SettingChanged += (sender, args) => ConVars.ConVars.buySkillsKeybind = skillActionName.Value;
-
-                ConVars.ConVars.buySkillsKeybind = skillActionName.Value;
-
-                ModSettingsManager.AddOption(new KeyBindOption(skillActionName));
             }
 
             {
