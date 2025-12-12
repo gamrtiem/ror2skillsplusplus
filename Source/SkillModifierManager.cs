@@ -59,7 +59,7 @@ namespace SkillsPlusPlus {
                             foreach (Type stateType in attribute.baseStateTypes) {
                                 if (typeToModifierMap.TryGetValue(stateType, out BaseSkillModifier existingModifier)) {
                                     Logger.Warn("Skill modifier conflict!!!");
-                                    Logger.Warn("Cannot add {0} since {1} already exists for the entity state {2}", existingModifier.GetType().FullName, stateType.FullName);
+                                    Logger.Warn("Cannot add {0} since {1} already exists for the entity state {2}", someSkillModifier.GetType().FullName, existingModifier.GetType().FullName, stateType.FullName);
                                     continue;
                                 }
                                 typeToModifierMap[stateType] = skillModifier;
