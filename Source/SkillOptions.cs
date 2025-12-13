@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using ExtraSkillSlots;
+using Rebindables;
 using MonoMod.RuntimeDetour;
 using Rewired;
 using Rewired.Data;
@@ -15,30 +15,29 @@ namespace SkillsPlusPlus
 {
     internal class SkillOptions
     {
-        public static RewiredAction hotkey { get; set; }
+        public static ModKeybind hotkey { get; set; }
         internal static void SetupGameplayOptions()
         {
-            hotkey = new RewiredAction
-            {
-                ActionId = 400,
-                Name = "SKILLS_GAMEPAD_BUY_BTN",
-                DisplayToken = "SKILLS_GAMEPAD_BUY_BTN",
-                DefaultKeyboardKey = KeyboardKeyCode.None,
-                DefaultJoystickKey = 16
-            };
-            InputCatalog.actionToToken[hotkey] = "SKILLS_GAMEPAD_BUY_BTN";
-            var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
-            new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
-            
-            On.RoR2.UI.SettingsPanelController.Start += (orig, self) =>
-            {
-                orig(self);
-                SettingsPanelControllerAwake(self);
-            };
+            hotkey = RebindAPI.RegisterModKeybind(new ModKeybind(
+                "SKILLS_GAMEPAD_BUY_BTN", // language token for the name of your input in the menu
+                KeyCode.None, // the default keyboard binding for your input
+                16, // the default controller binding for your input
+                "Jump" // optional: if specified, your input will be placed after the corresponding vanilla input in the controls menu
+            ));
+
+            // InputCatalog.actionToToken[hotkey] = "SKILLS_GAMEPAD_BUY_BTN";
+            // var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
+            // new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
+            //
+            // On.RoR2.UI.SettingsPanelController.Start += (orig, self) =>
+            // {
+            //     orig(self);
+            //     SettingsPanelControllerAwake(self);
+            // };
         }
         
         //taken from extra skill slots sorr y!!!!
-        internal static void AddCustomActions(Action<UserData> orig, UserData self)
+        /*internal static void AddCustomActions(Action<UserData> orig, UserData self)
         {
             self.actions?.Add(hotkey);
 
@@ -70,6 +69,6 @@ namespace SkillsPlusPlus
                 inputBindingControl.Awake();
                 Logger.Debug("added option !!");
             }
-        }
+        }*/
     }
 }

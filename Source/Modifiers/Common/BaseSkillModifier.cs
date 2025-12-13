@@ -1,4 +1,5 @@
 ﻿using System;
+using BepInEx.Configuration;
 using EntityStates;
 using RoR2;
 using RoR2.Skills;
@@ -94,6 +95,11 @@ namespace SkillsPlusPlus.Modifiers
         /// Called before registering a BaseSkillModifier. Override this function to call things such as adding hooks and Patching Skill Names
         /// </summary>
         public virtual void SetupSkill()
+        {
+            return;
+        }
+
+        public virtual void SetupConfig(ConfigFile config)
         {
             return;
         }

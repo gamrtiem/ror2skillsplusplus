@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using EntityStates;
+using Rebindables;
 using Rewired;
 using RiskOfOptions;
 using RoR2;
@@ -143,8 +144,8 @@ namespace SkillsPlusPlus
         {
             if (this.isSurvivorEnabled && this.body != null && self.outer.commonComponents.characterBody == this.body)
             {
-                Player inputPlayer = this.playerCharacterMasterController?.networkUser?.localUser?.inputPlayer;
-                if (inputPlayer != null && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillOptions.hotkey.ActionId)) && ConVars.ConVars.disableOnBuy.value && unspentSkillPoints > 0)
+                InputBankTest inputPlayer = this.playerCharacterMasterController?.body.inputBank;
+                if (inputPlayer != null && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButtonState(SkillOptions.hotkey).down) && ConVars.ConVars.disableOnBuy.value && unspentSkillPoints > 0)
                 {
                     return false;
                 }

@@ -13,7 +13,7 @@ using SkillsPlusPlus.UI;
 using UnityEngine;
 using UnityEngine.Networking;
 
-using ExtraSkillSlots;
+using Rebindables;
 using Rewired;
 using Rewired.Data;
 using System.Linq;
@@ -29,7 +29,7 @@ namespace SkillsPlusPlus
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod)]
     public sealed class SkillsPlugin : BaseUnityPlugin
     {
-        private static SkillsPlugin Instance = null;
+        public static SkillsPlugin Instance = null;
 
         private void Awake()
         {

@@ -1,4 +1,5 @@
-﻿using Rewired;
+﻿using Rebindables;
+using Rewired;
 using RiskOfOptions;
 using RoR2;
 using RoR2.UI;
@@ -159,6 +160,7 @@ namespace SkillsPlusPlus
 
                     LocalUser localUser = masterController?.networkUser?.localUser;
                     Player inputPlayer = localUser?.inputPlayer;
+                    InputBankTest inputBank = masterController.body.inputBank;
 
                     if (inputPlayer != null)
                     {
@@ -185,8 +187,8 @@ namespace SkillsPlusPlus
                                     skillAction = RewiredConsts.Action.SpecialSkill;
                                     break;
                             }
-                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillOptions.hotkey.ActionId)) || inputPlayer.GetButton(RewiredConsts.Action.Info));
-                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputPlayer.GetButton(SkillOptions.hotkey.ActionId)))
+                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputBank.GetButtonState(SkillOptions.hotkey).down) || inputPlayer.GetButton(RewiredConsts.Action.Info));
+                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputBank.GetButtonState(SkillOptions.hotkey).down))
                             {
                                 this.OnBuySkill();
                             }

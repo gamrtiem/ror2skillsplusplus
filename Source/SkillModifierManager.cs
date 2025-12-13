@@ -53,6 +53,7 @@ namespace SkillsPlusPlus
                         if (someSkillModifier is BaseSkillModifier skillModifier)
                         {
                             skillModifier.SetupSkill();
+                            skillModifier.SetupConfig(SkillsPlugin.Instance.Config);
 
                             skillModifier.skillNames = attribute.skillNames;
                             skillModifier.EntityStateTypes = attribute.baseStateTypes;
