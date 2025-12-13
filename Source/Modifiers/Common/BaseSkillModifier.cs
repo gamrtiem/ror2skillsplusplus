@@ -21,6 +21,12 @@ namespace SkillsPlusPlus.Modifiers {
         /// The SkillUpgrade associated to this Modifier. Call FindSkillUpgrade to assign.
         /// </summary>
         public SkillUpgrade registeredSkill;
+        
+        /// <summary>
+        /// The current character body skill modifier is being applied to.
+        /// </summary>
+        internal CharacterBody characterBody { get; set; }
+
 
         static bool bMultScalingLinear;
 

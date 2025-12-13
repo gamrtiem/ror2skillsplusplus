@@ -106,6 +106,7 @@ namespace SkillsPlusPlus {
             var modifier = SkillModifierManager.GetSkillModifier(activeSkillDef);
             if (modifier != null) {
                 // TODO: rename OnSkillLeveledUp to OnSkillChanged
+                modifier.characterBody = this.characterBody;
                 modifier.OnSkillLeveledUp(this.skillLevel, this.characterBody, activeSkillDef);
                 if (targetGenericSkill) {
                     targetGenericSkill.RecalculateValues();
