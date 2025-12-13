@@ -1,5 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 using SkillsPlusPlus.Modifiers;
@@ -11,15 +9,14 @@ using static EntityStates.VoidSurvivor.VoidBlinkBase;
 
 using RoR2.Projectile;
 using RoR2.Skills;
-
-using System.Linq;
 using UnityEngine.AddressableAssets;
-using EntityStates.VoidSurvivor.CorruptMode;
 using R2API;
 using GlobalEventManager = On.RoR2.GlobalEventManager;
 
-namespace SkillsPlusPlus.Source.Modifiers {
-    class VoidFiendSkillModifiers {
+namespace SkillsPlusPlus.Source.Modifiers
+{
+    internal class VoidFiendSkillModifiers
+    {
     }
 
 
@@ -39,13 +36,15 @@ namespace SkillsPlusPlus.Source.Modifiers {
         private int debuffTimerAdd;
         public BuffDef VoidFiendSpeedBuff;
         private int survlevel;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             surv = characterBody;
             survlevel = level;
         }
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
             base.OnSkillEnter(skillState, level);
             Logger.Debug($"OnSkillEnter: {skillState.GetType().Name}");
             if(skillState is FireHandBeam beam) {
@@ -73,16 +72,18 @@ namespace SkillsPlusPlus.Source.Modifiers {
                 }
             }
         }
-        public override void OnSkillExit(BaseState skillState, int level) {
+        public override void OnSkillExit(BaseState skillState, int level)
+        {
             base.OnSkillExit(skillState, level);
-            if (skillState is FireCorruptHandBeam corruptbeam) {
+            if (skillState is FireCorruptHandBeam corruptbeam)
+            {
                 if (surv && VoidFiendSpeedBuff)
                 {
                     surv.RemoveBuff(VoidFiendSpeedBuff);
                 }
             }
         }
-        
+
         public override void SetupSkill()
         {
             RegisterSpeedBuff();
@@ -121,14 +122,14 @@ namespace SkillsPlusPlus.Source.Modifiers {
             if (damageinfo == null) return;
             if (damageinfo.damageType.damageSource != DamageSource.Primary) return;
             if (damageinfo.attacker != surv.gameObject) return;
-            if(debuffTimerAdd == 0) return;
-            if(surv.TryGetComponent(out VoidSurvivorController controller))
+            if (debuffTimerAdd == 0) return;
+            if (surv.TryGetComponent(out VoidSurvivorController controller))
             {
                 if (controller.isCorrupted)
                     return;
             }
             Logger.Debug(debuffTimerAdd + " debuffing longer");
-            if(victim.TryGetComponent(out CharacterBody charbody))
+            if (victim.TryGetComponent(out CharacterBody charbody))
             {
                 charbody.AddTimedBuff(RoR2Content.Buffs.Slow50, 3 + debuffTimerAdd); // 3 is the one the damagetype adds 
             }
@@ -137,14 +138,19 @@ namespace SkillsPlusPlus.Source.Modifiers {
 
     [SkillLevelModifier("ChargeMegaBlaster", typeof(ChargeMegaBlaster), typeof(FireMegaBlasterBase), // flood
         typeof(FireMegaBlasterBig), typeof(FireMegaBlasterSmall))]
-    class VoidFiendChargeMegaSkillModifier : BaseSkillModifier {
-        
+    internal class VoidFiendChargeMegaSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
-            if (skillState is ChargeMegaBlaster chargeMegaBlaster) {
+
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
+            if (skillState is ChargeMegaBlaster chargeMegaBlaster)
+            {
                 Logger.Debug("ChargeMegaBlaster");
-                chargeMegaBlaster.baseDuration =  MultScaling(2f, -0.15f, level);
-            } else if (skillState is FireMegaBlasterBase firemegablaster) {
+                chargeMegaBlaster.baseDuration = MultScaling(2f, -0.15f, level);
+            }
+            else if (skillState is FireMegaBlasterBase firemegablaster)
+            {
                 Logger.Debug("FireMegaBlasterBase");
                 firemegablaster.projectilePrefab.transform.localScale = new Vector3(MultScaling(1, 0.15f, level), MultScaling(1, 0.15f, level), MultScaling(1, 0.15f, level));
                 Logger.Debug(firemegablaster.projectilePrefab.tag);
@@ -159,16 +165,18 @@ namespace SkillsPlusPlus.Source.Modifiers {
                 Logger.Debug("FireMegaBlasterSmall");
             }*/
         }
-        
+
     }
 
     [SkillLevelModifier("FireCorruptDisk", typeof(FireCorruptDisks))] // corrupt flood
-    class VoidFiendFireCorruptDiskSkillModifier : SimpleSkillModifier<FireCorruptDisks> {
-        CharacterBody surv;
+    internal class VoidFiendFireCorruptDiskSkillModifier : SimpleSkillModifier<FireCorruptDisks>
+    {
+        private CharacterBody surv;
         public float stockamount;
         public int skilllevel;
-        
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             skilllevel = level;
             surv = characterBody;
@@ -183,23 +191,23 @@ namespace SkillsPlusPlus.Source.Modifiers {
                 return;
             impactExplosion.blastDamageCoefficient = MultScaling(1, 0.15f, level);
         }
-        
+
         public override void SetupSkill()
         {
             //On.RoR2.GlobalEventManager.OnHitEnemy += GlobalEventManagerOnOnHitEnemy;
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPIOnGetStatCoefficients;
             base.SetupSkill();
         }
-        
+
         private void RecalculateStatsAPIOnGetStatCoefficients(CharacterBody sender, RecalculateStatsAPI.StatHookEventArgs args)
         {
             if (sender != surv) return;
             Logger.Debug(sender.gameObject);
             Logger.Debug(surv);
             // this should technically never be null but you never know ,..
-            if(surv.TryGetComponent(out VoidSurvivorController controller))
+            if (surv.TryGetComponent(out VoidSurvivorController controller))
             {
-                if(controller.isCorrupted)
+                if (controller.isCorrupted)
                     args.secondaryCooldownMultAdd -= 1 - MultScaling(1, -0.10f, skilllevel);
             }
             Logger.Debug(1 - MultScaling(1, -0.10f, skilllevel));
@@ -207,18 +215,21 @@ namespace SkillsPlusPlus.Source.Modifiers {
     }
 
     [SkillLevelModifier("VoidBlinkUp", typeof(VoidBlinkUp))]
-    class VoidFiendVoidBlinkUpSkillModifier : SimpleSkillModifier<VoidBlinkUp> {
-        BuffDef VoidFiendArmorBuff;
-        CharacterBody surv;
+    internal class VoidFiendVoidBlinkUpSkillModifier : SimpleSkillModifier<VoidBlinkUp>
+    {
+        private BuffDef VoidFiendArmorBuff;
+        private CharacterBody surv;
         private int skilllevel;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             surv = characterBody;
             skilllevel = level;
         }
-        public override void OnSkillExit(VoidBlinkUp skillState, int level) {
+        public override void OnSkillExit(VoidBlinkUp skillState, int level)
+        {
             Logger.Debug("VoidBlinkUp");
-            if(level > 0)
+            if (level > 0)
                 surv.AddTimedBuff(VoidFiendArmorBuff, 3);
         }
         public override void SetupSkill()
@@ -227,7 +238,7 @@ namespace SkillsPlusPlus.Source.Modifiers {
             RecalculateStatsAPI.GetStatCoefficients += RecalculateStatsAPIOnGetStatCoefficients;
             base.SetupSkill();
         }
-        
+
         public void RegisterArmorBuff()
         {
             BuffDef buffDef = ScriptableObject.CreateInstance<BuffDef>();
@@ -252,19 +263,22 @@ namespace SkillsPlusPlus.Source.Modifiers {
     }
 
     [SkillLevelModifier("VoidBlinkDown", typeof(VoidBlinkDown))]
-    class VoidFiendVoidBlinkDownSkillModifier : SimpleSkillModifier<VoidBlinkDown> {
-        BuffDef VoidFiendDamageSpeedBuff;
-        CharacterBody surv;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+    internal class VoidFiendVoidBlinkDownSkillModifier : SimpleSkillModifier<VoidBlinkDown>
+    {
+        private BuffDef VoidFiendDamageSpeedBuff;
+        private CharacterBody surv;
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             surv = characterBody;
         }
-        public override void OnSkillExit(VoidBlinkDown skillState, int level) {
+        public override void OnSkillExit(VoidBlinkDown skillState, int level)
+        {
             Logger.Debug("VoidBlinkDown");
-            if(level > 0)
+            if (level > 0)
                 surv.AddTimedBuff(VoidFiendDamageSpeedBuff, level + 1);
         }
-        
+
         public override void SetupSkill()
         {
             RegisterDamageSpeedBuff();
@@ -296,28 +310,37 @@ namespace SkillsPlusPlus.Source.Modifiers {
     }
 
     [SkillLevelModifier("CrushCorruption", typeof(CrushCorruption), typeof(ChargeCrushCorruption))]
-    class VoidFiendCrushCorruptionSkillModifier : BaseSkillModifier {
+    internal class VoidFiendCrushCorruptionSkillModifier : BaseSkillModifier
+    {
 
-        public override void OnSkillEnter(BaseState skillState, int level) {
-            if (skillState is CrushCorruption crushCorruption) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
+            if (skillState is CrushCorruption crushCorruption)
+            {
                 Logger.Debug("CrushCorruption");
                 crushCorruption.selfHealFraction = AdditiveScaling(crushCorruption.selfHealFraction, 0.15f, level);
-            } 
+            }
         }
     }
 
     [SkillLevelModifier("CrushHealth", typeof(CrushHealth), typeof(ChargeCrushHealth))]
-    class VoidFiendCrushHealthSkillModifier : BaseSkillModifier {
-        CharacterBody surv;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+    internal class VoidFiendCrushHealthSkillModifier : BaseSkillModifier
+    {
+        private CharacterBody surv;
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
             surv = characterBody;
         }
-        public override void OnSkillEnter(BaseState skillState, int level) {
-            if (skillState is CrushHealth crushHealth) {
+        public override void OnSkillEnter(BaseState skillState, int level)
+        {
+            if (skillState is CrushHealth crushHealth)
+            {
                 Logger.Debug("CrushHealth");
                 crushHealth.corruptionChange = AdditiveScaling(crushHealth.corruptionChange, 15f, level);
-            } else if (skillState is ChargeCrushHealth) {
+            }
+            else if (skillState is ChargeCrushHealth)
+            {
                 Logger.Debug("ChargeCrushHealth");
             }
         }

@@ -1,7 +1,6 @@
 ﻿using EntityStates.Bandit2;
 using EntityStates.Bandit2.Weapon;
 using R2API;
-using R2API.Utils;
 using RoR2;
 using RoR2.Skills;
 using System;
@@ -11,17 +10,14 @@ using static R2API.RecalculateStatsAPI;
 
 namespace SkillsPlusPlus.Modifiers
 {
-    [SkillLevelModifier("FireShotgun2", new Type[]
-        {
-        typeof(FireShotgun2)
-        })]
+    [SkillLevelModifier("FireShotgun2", typeof(FireShotgun2))]
     internal class BanditFireShotgunSkillModifier : SimpleSkillModifier<FireShotgun2>
     {
         public override void OnSkillEnter(FireShotgun2 skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
 
-            skillState.bulletCount = skillState.bulletCount + level;
+            skillState.bulletCount += level;
             skillState.damageCoefficient = MultScaling(skillState.damageCoefficient, 0.05f, level);
 
             skillState.minFixedSpreadYaw += level * 0.5f;
@@ -29,13 +25,10 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("Bandit2Blast", new Type[]
-        {
-        typeof(Bandit2FireRifle)
-        })]
+    [SkillLevelModifier("Bandit2Blast", typeof(Bandit2FireRifle))]
     internal class BanditFireRifleSkillModifier : SimpleSkillModifier<Bandit2FireRifle>
     {
-        float baseBloom = 0;
+        private float baseBloom = 0;
         public override void OnSkillEnter(Bandit2FireRifle skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
@@ -55,13 +48,10 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("SlashBlade", new Type[]
-    {
-    typeof(SlashBlade)
-    })]
+    [SkillLevelModifier("SlashBlade", typeof(SlashBlade))]
     internal class BanditBladeSkillModifier : SimpleSkillModifier<SlashBlade>
     {
-        Vector3 originalHitboxScale = Vector3.zero;
+        private Vector3 originalHitboxScale = Vector3.zero;
         public override void OnSkillEnter(SlashBlade slash, int level)
         {
             //Visual Scaling
@@ -96,10 +86,7 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("Bandit2SerratedShivs", new Type[]
-        {
-        typeof(Bandit2FireShiv)
-        })]
+    [SkillLevelModifier("Bandit2SerratedShivs", typeof(Bandit2FireShiv))]
     internal class BanditFireShivSkillModifier : SimpleSkillModifier<Bandit2FireShiv>
     {
         public override void OnSkillEnter(Bandit2FireShiv skillState, int level)
@@ -116,16 +103,12 @@ namespace SkillsPlusPlus.Modifiers
         }
     }
 
-    [SkillLevelModifier("ThrowSmokebomb", new Type[]
-        {
-        typeof(ThrowSmokebomb)
-        })]
+    [SkillLevelModifier("ThrowSmokebomb", typeof(ThrowSmokebomb))]
     internal class BanditSkillThrowSmokebombModifier : SimpleSkillModifier<ThrowSmokebomb>
     {
-        static float baseRadius = 0;
-        static float baseDamage = 0;
-
-        static BuffDef BanditSpeedBuff;
+        private static float baseRadius = 0;
+        private static float baseDamage = 0;
+        private static BuffDef BanditSpeedBuff;
 
         public static void RegisterBanditSpeedBuff()
         {
@@ -190,13 +173,10 @@ namespace SkillsPlusPlus.Modifiers
     }
 
 
-    [SkillLevelModifier("ResetRevolver", new Type[]
-        {
-        typeof(FireSidearmResetRevolver)
-        })]
+    [SkillLevelModifier("ResetRevolver", typeof(FireSidearmResetRevolver))]
     internal class BanditSkillResetRevolverModifier : SimpleSkillModifier<FireSidearmResetRevolver>
     {
-        static SkillUpgrade resetSkill;
+        private static SkillUpgrade resetSkill;
 
         public override void OnSkillEnter(FireSidearmResetRevolver skillState, int level)
         {
@@ -214,14 +194,14 @@ namespace SkillsPlusPlus.Modifiers
 
         public static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo di)
         {
-            if(resetSkill != null)
+            if (resetSkill != null)
             {
                 if (di.attacker != null && self != null)
                 {
                     CharacterBody body = self.GetComponent<CharacterBody>();
                     if (body != null)
                     {
-                        
+
                         if ((di.damageType & RoR2.DamageType.BonusToLowHealth) == RoR2.DamageType.BonusToLowHealth && (di.damageType & RoR2.DamageType.ResetCooldownsOnKill) == RoR2.DamageType.ResetCooldownsOnKill)
                         {
                             di.damage *= Mathf.Lerp(1.0f + resetSkill.skillLevel * 0.3f, 1.0f + resetSkill.skillLevel * 0.1f, self.combinedHealthFraction);
@@ -243,14 +223,11 @@ namespace SkillsPlusPlus.Modifiers
     }
 
 
-    [SkillLevelModifier("SkullRevolver", new Type[]
-        {
-        typeof(FireSidearmSkullRevolver)
-        })]
+    [SkillLevelModifier("SkullRevolver", typeof(FireSidearmSkullRevolver))]
     internal class BanditSkillSkullRevolverModifier : SimpleSkillModifier<FireSidearmSkullRevolver>
     {
-        static SkillUpgrade revolverSkill;
-        
+        private static SkillUpgrade revolverSkill;
+
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
@@ -271,7 +248,7 @@ namespace SkillsPlusPlus.Modifiers
 
         public static void HealthComponent_TakeDamage(On.RoR2.HealthComponent.orig_TakeDamage orig, HealthComponent self, DamageInfo di)
         {
-            if (revolverSkill != null) 
+            if (revolverSkill != null)
             {
                 if (di != null && self != null)
                 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using EntityStates;
 using EntityStates.GlobalSkills.LunarDetonator;
 using EntityStates.GlobalSkills.LunarNeedle;
@@ -10,15 +9,17 @@ using RoR2.Skills;
 using UnityEngine;
 using static R2API.RecalculateStatsAPI;
 
-namespace SkillsPlusPlus.Modifiers {
-    class LunarModifiers {
+namespace SkillsPlusPlus.Modifiers
+{
+    internal class LunarModifiers
+    {
 
-        #pragma warning disable CS0649
-        static List<String> HereticSkillsWarned = new List<string>();
-        #pragma warning restore CS0649
+#pragma warning disable CS0649
+        private static List<String> HereticSkillsWarned = new List<string>();
+#pragma warning restore CS0649
         public static List<String> HereticSupportedPassiveUpgrades = new List<String> { "LunarPrimaryReplacement", "LunarSecondaryReplacement", "LunarUtilityReplacement", "LunarDetonatorSpecialReplacement" };
 
-    public static void RecalculateStats_GetLunarStats(CharacterBody sender, StatHookEventArgs args)
+        public static void RecalculateStats_GetLunarStats(CharacterBody sender, StatHookEventArgs args)
         {
             if (!sender)
             {
@@ -78,8 +79,8 @@ namespace SkillsPlusPlus.Modifiers {
         [SkillLevelModifier(new string[] { "LunarSecondaryReplacement", "SlicingMaelstrom" }, typeof(ThrowLunarSecondary), typeof(ChargeLunarSecondary))]
         internal class HooksOfHeresySkillModifier : BaseSkillModifier
         {
-            static float baseMaelstromScale = 0f;
-            static float baseBlastRadius = 0f;
+            private static float baseMaelstromScale = 0f;
+            private static float baseBlastRadius = 0f;
 
             public override void OnSkillEnter(BaseState skillState, int level)
             {
@@ -96,7 +97,7 @@ namespace SkillsPlusPlus.Modifiers {
 
                         HitBoxGroup group = projectileDot.gameObject.GetComponent<HitBoxGroup>();
 
-                        foreach(HitBox hitbox in group.hitBoxes)
+                        foreach (HitBox hitbox in group.hitBoxes)
                         {
                             if (Mathf.Abs(baseMaelstromScale) < 0.1f)
                             {
@@ -107,7 +108,7 @@ namespace SkillsPlusPlus.Modifiers {
                         }
                     }
 
-                    if(throwSkillState.projectilePrefab.TryGetComponent(out ProjectileExplosion projectileExplosion))
+                    if (throwSkillState.projectilePrefab.TryGetComponent(out ProjectileExplosion projectileExplosion))
                     {
                         if (Mathf.Abs(baseBlastRadius) < 0.1f)
                         {
@@ -125,10 +126,12 @@ namespace SkillsPlusPlus.Modifiers {
             }
         }
 
-        [SkillLevelModifier(new string[] { "LunarUtilityReplacement" , "Shadowfade"} , typeof(GhostUtilitySkillState))]
-        internal class StridesOfHeresySkillModifier : SimpleSkillModifier<GhostUtilitySkillState> {
+        [SkillLevelModifier(new string[] { "LunarUtilityReplacement", "Shadowfade" }, typeof(GhostUtilitySkillState))]
+        internal class StridesOfHeresySkillModifier : SimpleSkillModifier<GhostUtilitySkillState>
+        {
 
-            public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
+            public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+            {
                 base.OnSkillLeveledUp(level, characterBody, skillDef);
 
                 GhostUtilitySkillState.moveSpeedCoefficient = MultScaling(1.3f, 0.1f, level); // +10% 
@@ -144,9 +147,8 @@ namespace SkillsPlusPlus.Modifiers {
         [SkillLevelModifier(new string[] { "LunarDetonatorSpecialReplacement", "Ruin" }, typeof(LunarDetonatorSkill), typeof(Detonate))]
         internal class HeartOfHeresySkillModifier : BaseSkillModifier
         {
-
-            static float baseDamageCoefficient = 0f;
-            static SkillUpgrade heartSkill;
+            private static float baseDamageCoefficient = 0f;
+            private static SkillUpgrade heartSkill;
 
             public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
             {
@@ -168,7 +170,7 @@ namespace SkillsPlusPlus.Modifiers {
 
             public static void LunarDetonatorPassiveAttachment_OnDamageDealt(On.RoR2.LunarDetonatorPassiveAttachment.DamageListener.orig_OnDamageDealtServer orig, MonoBehaviour self, DamageReport damageReport)
             {
-                orig.Invoke(self, damageReport);
+                orig.Invoke((LunarDetonatorPassiveAttachment.DamageListener)self, damageReport);
 
                 float rollValue = damageReport.damageInfo.procCoefficient * (((heartSkill ? heartSkill.skillLevel : 0) * 0.20f));
 
