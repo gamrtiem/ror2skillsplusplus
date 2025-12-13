@@ -156,7 +156,9 @@ namespace SkillsPlusPlus {
             if (state.outer) {
                 if (state.outer.TryGetComponent(out CharacterBody characterBody)) {
                     if (characterBody.master && characterBody.master.gameObject.TryGetComponent(out MinionOwnership minion) && minion.ownerMaster) {
-                        if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwner in CharacterBody, returning " + minion.ownerMaster.GetBody().GetDisplayName());
+                        // GetBody() isn't guaranteed to not return a null reference
+                        var masterBody = minion.ownerMaster.GetBody();
+                        if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwner in CharacterBody, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
                         return minion.ownerMaster.GetBody();
                     }
 
@@ -167,13 +169,15 @@ namespace SkillsPlusPlus {
                     if (bLogging) Logger.Debug(state.GetType().Name + ": Found ProjectileController, returning " + projectileController.owner.GetComponent<CharacterBody>().GetDisplayName());
                     return projectileController.owner.GetComponent<CharacterBody>();
                 } else if (state.outer.TryGetComponent(out MinionOwnership minionOwnership) && minionOwnership.ownerMaster) {
-                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwnership, returning " + minionOwnership.ownerMaster.GetBody().GetDisplayName());
+                    var masterBody = minionOwnership.ownerMaster.GetBody();
+                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwnership, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
                     return minionOwnership.ownerMaster.GetBody();
                 } else if (state.outer.TryGetComponent(out GenericOwnership genericOwnership) && genericOwnership.ownerObject) {
                     if (bLogging) Logger.Debug(state.GetType().Name + ": Found GenericOwnership, returning " + genericOwnership.ownerObject.GetComponent<CharacterBody>().GetDisplayName());
                     return genericOwnership.ownerObject.GetComponent<CharacterBody>();
                 } else if (state.outer.TryGetComponent(out Deployable deployable) && deployable.ownerMaster) {
-                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found Deployable, returning " + deployable.ownerMaster.GetBody().GetDisplayName());
+                    var masterBody = deployable.ownerMaster.GetBody(); // This isn't a gup, but knowing GetBody() can return null we should be checking it anyway
+                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found Deployable, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
                     return deployable.ownerMaster.GetBody();
                 }
             }

@@ -33,7 +33,7 @@ namespace SkillsPlusPlus.Source.Modifiers {
     //    }
 
     //}
-    [SkillLevelModifier(new[] { "FireHandBeam", "ChargeHandBeam", "FireCorruptBeam" }, typeof(FireHandBeam), typeof(ChargeHandBeam), typeof(FireCorruptHandBeam))]
+    [SkillLevelModifier(new[] { "FireHandBeam", "ChargeHandBeam", "FireCorruptBeam", "ChargeCorruptHandBeam" }, typeof(FireHandBeam), typeof(ChargeHandBeam), typeof(FireCorruptHandBeam), typeof(ChargeCorruptHandBeam))]
     class VoidFiendHandBeamSkillModifier : BaseSkillModifier {
         CharacterBody surv;
         private int debuffTimerAdd;
@@ -47,14 +47,13 @@ namespace SkillsPlusPlus.Source.Modifiers {
 
         public override void OnSkillEnter(BaseState skillState, int level) {
             base.OnSkillEnter(skillState, level);
+            Logger.Debug($"OnSkillEnter: {skillState.GetType().Name}");
             if(skillState is FireHandBeam beam) {
-                Logger.Debug("FireHandBeam");
                 Logger.Debug(debuffTimerAdd);
                 beam.damageCoefficient = MultScaling(beam.damageCoefficient, 0.10f, level);
                 debuffTimerAdd = level;
                 //beam.bulletCount = MultScaling(beam.bulletCount, 1, level);
             } else if (skillState is FireCorruptHandBeam corruptbeam) {
-                Logger.Debug("FireCorruptHandBeam");
                 corruptbeam.beamVfxPrefab.transform.localScale = new Vector3(corruptbeam.beamVfxPrefab.transform.localScale.x, corruptbeam.beamVfxPrefab.transform.localScale.y, MultScaling(1, 0.30f, level)); //vfx should extend a bit farther imo 
                 Logger.Debug("FireCorruptHandBeam" + corruptbeam.maxDistance);
                 corruptbeam.maxDistance = MultScaling(corruptbeam.maxDistance, 0.25f, level);
@@ -132,24 +131,6 @@ namespace SkillsPlusPlus.Source.Modifiers {
             if(victim.TryGetComponent(out CharacterBody charbody))
             {
                 charbody.AddTimedBuff(RoR2Content.Buffs.Slow50, 3 + debuffTimerAdd); // 3 is the one the damagetype adds 
-            }
-        }
-    }
-
-    [SkillLevelModifier("FireCorruptBeam", typeof(FireCorruptHandBeam), typeof(ChargeCorruptHandBeam))]
-    class VoidFiendCorruptHandBeamSkillModifier : BaseSkillModifier {
-
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef) {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-        }
-
-        public override void OnSkillEnter(BaseState skillState, int level) {
-            base.OnSkillEnter(skillState, level);
-
-            if (skillState is FireCorruptHandBeam) {
-                Logger.Debug("FireCorruptHandBeam");
-            } else if (skillState is ChargeCorruptHandBeam) {
-                Logger.Debug("ChargeCorruptHandBeam");
             }
         }
     }
