@@ -24,7 +24,6 @@ namespace SkillsPlusPlus.Source.Modifiers
     class ChefDiceSkillModifier : BaseSkillModifier
     {
         private int locallevel;
-        public static int[] ChargedDiceArray = { 8, 4, 4 }; // this might cause issues in multiplayer due to being static,.., look into ,,.,,
 
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
@@ -53,15 +52,48 @@ namespace SkillsPlusPlus.Source.Modifiers
                 
                 c.Emit(OpCodes.Ldloc_2); //load array 
                 c.Emit(OpCodes.Pop); //kill array
-                c.Emit(OpCodes.Ldsfld, //add reference to 
-                    typeof(ChefDiceSkillModifier)
-                        .GetField(nameof(ChargedDiceArray)));
+                c.Emit(OpCodes.Ldarg_0);
+                c.EmitDelegate<Func<EntityStates.Chef.Dice, int[]>>((cleaverProjectile) =>
+                    {
+                        int level = 0;
+                        int[] ChargedDiceArray = { 8, 4, 4 }; 
+                        Logger.Debug("1");
+                        var skillUpgrades = cleaverProjectile.chefController.characterBody.gameObject.GetComponents<SkillUpgrade>();
+                        Logger.Debug("2");
+                        if (skillUpgrades != null)
+                        {
+                            foreach (var upgrade in skillUpgrades)
+                            {
+                                if (upgrade.targetBaseSkillName != null)
+                                {
+                                    if (upgrade.targetBaseSkillName == "ChefDiceBoosted")
+                                    { 
+                                        level = upgrade.skillLevel;
+                                    }
+                                }
+                            }
+                        
+                            Logger.Debug("2");
+                            ChargedDiceArray[0] = 8 + level * 2;
+                            ChargedDiceArray[1] = 4 + level;
+                            ChargedDiceArray[2] = 4 + level;
+                        }
+                        else
+                        {
+                            Logger.Debug("ooough ,.,.,.,. null skillupgrades .,.,., shouldnt hapen .,.,.");
+                        }
+                        
+                        
+                        return ChargedDiceArray;
+                    }
+                );
                 c.Emit(OpCodes.Stloc_2);
             }
             else 
             {
                 Logger.Error(il.Method.Name + " IL Hook failed!");
             }
+            Logger.Debug("spawn cleavers = " + il);
 
         }
 
@@ -97,10 +129,6 @@ namespace SkillsPlusPlus.Source.Modifiers
 
                 Logger.Debug($"travel distance after {dice.cleaverController.maxTravelDistance}");
                 Logger.Debug($"damage after {dice.damageCoefficient}");
-                
-                ChargedDiceArray[0] = 8 + level;
-                ChargedDiceArray[1] = 4 + level;
-                ChargedDiceArray[2] = 4 + level;
             }
         }
 
@@ -142,7 +170,6 @@ namespace SkillsPlusPlus.Source.Modifiers
                 //Logger.Debug($"Sear {sear.dams}");
                 Logger.Debug($"Sear {sear.tickDamageCoefficient}");
                 
-
                 level += sear.characterBody.GetBuffCount(YesChefSkillModifier.levelupBuff);
                 
                 sear.characterBody.SetBuffCount(ChefAttackSpeedBuff.buffIndex, level);
@@ -175,11 +202,9 @@ namespace SkillsPlusPlus.Source.Modifiers
             orig(self, damageInfo);
 
             var damagetypecheck = (damageInfo.damageType == SearDamageTypeCombo || damageInfo.damageType == BoostedSearDamageTypeCombo);
-            
             if (!damagetypecheck) return; // no clue if this actually does anything "preformance" wise since its mostly here to prevent it from calling getcomponent every take damage ,..,,.
             
             var surv = damageInfo.attacker?.GetComponent<CharacterBody>();
-            
             if (surv != null && surv.GetBuffCount(ChefAttackSpeedBuff) > 0)
             {
                 Logger.Debug(damageInfo.damageType);
@@ -314,7 +339,7 @@ namespace SkillsPlusPlus.Source.Modifiers
                 Logger.Debug($"duration {unknownglaze.duration}");
                 Logger.Debug($"grenadeCountmax {Glaze.grenadeCountMax}");
                 
-                unknownglaze.grenadeCount = level * -4; //Glaze.grenadeCountMax is 3, if we make the instance variable negative we can make it bigger ,., stupid but what it comes to when static variables .,,.,.,.
+                unknownglaze.grenadeCount = level * -3; //Glaze.grenadeCountMax is 3, if we make the instance variable negative we can make it bigger ,., stupid but what it comes to when static variables .,,.,.,.
                 Logger.Debug($"damageStat {unknownglaze.damageStat}");
                 Logger.Debug($"fireTimer {unknownglaze.fireTimer}");
                 Logger.Debug($"duration {unknownglaze.duration}");
@@ -401,7 +426,6 @@ namespace SkillsPlusPlus.Source.Modifiers
                 if (skills != null)
                 {
                     Logger.Debug(skills);
-                    Logger.Debug("aaaaaaaaaaaaaaAAAAAAAAAAAAAAAAAAAAAAAaaaaaAAaaaAAaaaAAaaAAAa");
                     foreach (var skillUpgrade in skills)
                     {
                         Logger.Debug(skillUpgrade.targetBaseSkillName);
@@ -411,38 +435,8 @@ namespace SkillsPlusPlus.Source.Modifiers
                         self.gasolineRadius = MultScaling(self.gasolineRadius, 1.3f, skillUpgrade.skillLevel);
                     }
                 }
-                else
-                {
-                    Logger.Debug("null SkillUpgrade");
-                    controller.OnEnable();
-                    Logger.Debug($"{controller.name}");
-                    Logger.Debug($"{controller.Networkowner}");
-                    Logger.Debug("null SkillUpgrade");
-                    if (controller == null)
-                    {
-                        Logger.Debug("projectileController null");
-                    }
-                    else if (controller.owner == null)
-                    {
-                        Logger.Debug("owner null");
-
-                    }
-                    else if (controller.owner.GetComponent<CharacterBody>() == null)
-                    {
-                        Logger.Debug("CharacterBody null");
-
-                    }
-                    else if (controller.owner.GetComponent<CharacterBody>().GetComponents<SkillUpgrade>() == null)
-                    {
-                        Logger.Debug("SkillUpgrade null");
-                    }
-                }
             };
-
-
         }
-        
-        
 
         private Sprite ChefOilSpillSkillDefOnGetCurrentIcon(ChefOilSpillSkillDef.orig_GetCurrentIcon orig, RoR2.Skills.ChefOilSpillSkillDef self, GenericSkill skillSlot)
         {
@@ -469,7 +463,9 @@ namespace SkillsPlusPlus.Source.Modifiers
             } else if (skillState is OilSpillBase oilSpillBase)
             {
                 Logger.Debug("OilSpillBase");
-                oilSpillBase.extraBouncesUsed = AdditiveScaling(oilSpillBase.extraBouncesUsed, -1, level);
+                
+                level += oilSpillBase.characterBody.GetBuffCount(YesChefSkillModifier.levelupBuff);
+                oilSpillBase.extraBouncesUsed = AdditiveScaling(oilSpillBase.extraBouncesUsed, -2, level);
                 
                 var oilcontroller = oilSpillBase.meatballProjectile?.GetComponent<ProjectileImpactExplosion>();
                 if (oilcontroller != null)
@@ -482,6 +478,13 @@ namespace SkillsPlusPlus.Source.Modifiers
                     Logger.Debug("oilcontroller null");
                 }
             } 
+        }
+        
+        public override void OnSkillExit(BaseState skillState, int level)
+        {
+            base.OnSkillExit(skillState, level);
+
+            skillState.characterBody.SetBuffCount(YesChefSkillModifier.levelupBuff.buffIndex, 0);
         }
     }
     

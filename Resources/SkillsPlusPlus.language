@@ -10,7 +10,7 @@
 
 		"MULT_SCALING_LINEAR": "Linear Skill Multipliers",
 		"MULT_SCALING_LINEAR_DESCRIPTION": "Should Multiplicative (+%) skill values use a linear value rather than an exponential one. (Useful for playing with low \"Levels per skill point\" values)\n\nIn multiplayer runs the host's setting is used",
-		
+
 		"DISABLE_SKILL_BUY_INPUT": "Disable Skills While Buying",
 		"DISABLE_SKILL_BUY_INPUT_DESCRIPTION": "Should skills be disabled while the Buy Skills Input is pressed. (Disable this if you find yourself hitting the key by mistake)",
 
@@ -42,7 +42,7 @@
 		"TOOLBOTDUALWIELD_UPGRADE_DESCRIPTION": "Gain <style=cIsUtility>+25</style> armor, <style=cIsDamage>+15%</style> damage and <style=cIsUtility>+10%</style> speed",
 
 		"ENGIBODYFIREGRENADE_UPGRADE_DESCRIPTION": "<style=cIsDamage>+1</style> and <style=cIsDamage>+2</style> to the minimum and maximum grenades fired",
-		"ENGIBODYPLACEMINE_UPGRADE_DESCRIPTION": "<style=cIsUtility>-10%</style> arming time, <style=cIsDamage>+20%</style> damage, <style=cIsUtility>+20%</style> blast size, and <style=cIsUtility>+20%</style> trigger range",
+		"ENGIBODYPLACEMINE_UPGRADE_DESCRIPTION": "<style=cIsUtility>-10%</style> arming time, <style=cIsDamage>+20%</style> damaFge, <style=cIsUtility>+20%</style> blast size, and <style=cIsUtility>+20%</style> trigger range",
 		"ENGIBODYPLACESPIDERMINE_UPGRADE_DESCRIPTION": "<style=cIsUtility>+30%</style> trigger range and <style=cIsDamage>+20%</style> damage",
 		"ENGIBODYPLACEBUBBLESHIELD_UPGRADE_DESCRIPTION": "<style=cIsUtility>+15%</style> duration and <style=cIsUtility>+15%</style> size",
 		"ENGIHARPOONS_UPGRADE_DESCRIPTION": "<style=cIsUtility>+1</style> ammo, <style=cIsDamage>+20%</style> damage, and <style=cIsUtility>+30%</style> range",
@@ -54,7 +54,7 @@
 		"MAGEBODYNOVABOMB_UPGRADE_DESCRIPTION": "<style=cIsDamage>+15%</style> damage, <style=cIsUtility>+5%</style> max charge time, and <style=cIsUtility>+10%</style> blast size",
 		"MAGEBODYICEBOMB_UPGRADE_DESCRIPTION": "<style=cIsDamage>+20%</style> damage",
 		"MAGEBODYWALL_UPGRADE_DESCRIPTION": "<style=cIsDamage>+30%</style> wall damage and <style=cIsUtility>+20%</style> wall length",
-		"MAGEBODYFLAMETHROWER_UPGRADE_DESCRIPTION": "<style=cIsUtility>+20%</style> range, <style=cIsUtility>+25%</style> flame radius, and <style=cIsDamage>+20%</style> damage",
+		"MAGEBODYFLAMETHROWER_UPGRADE_DESCRIPTION": "<style=cIsUtility>+20%</style> range and <style=cIsDamage>+20%</style> damage",
 		"MAGEBODYFLYUP_UPGRADE_DESCRIPTION": "<style=cIsDamage>+25%</style> damage and <style=cIsUtility>+30%</style> area of effect",
 
 		"MERCGROUNDLIGHT2_UPGRADE_DESCRIPTION": "<style=cIsDamage>+20%</style> damage, and <style=cIsUtility>+15%</style> attack speed",
@@ -118,7 +118,7 @@
 		"HERETIC_UTILITY_SKILL_DESCRIPTION": "Squawk a solemn reply.",
 		"HERETIC_SPECIAL_SKILL_NAME": "Nevermore",
 		"HERETIC_SPECIAL_SKILL_DESCRIPTION": "Squawk a solemn reply.",
-		
+
 		"RAILGUNNERBODYFIREPISTOL_UPGRADE_DESCRIPTION": "<style=cIsUtility>+10%</style> rate of fire and <style=cIsUtility>+20%</style> range",
 		"RAILGUNNERBODYSCOPEHEAVY_UPGRADE_DESCRIPTION": "<style=cIsUtility>+1</style> max empowered round and <style=cIsUtility>+1</style> stock every two levels",
 		"RAILGUNNERBODYSCOPELIGHT_UPGRADE_DESCRIPTION": "<style=cIsUtility>+1</style> temporary armor per kill. Turns into <style=cIsUtility>+0.25s</style> movement speed boost after zoom out",
@@ -126,12 +126,12 @@
 		"RAILGUNNERBODYFIREMINEBLINDING_UPGRADE_DESCRIPTION": "<style=cIsUtility>+10%</style> global damage on affected enemies, <style=cIsUtility>+15%</style> range, and <style=cIsUtility>+15%</style> throw range",
 		"RAILGUNNERBODYCHARGESNIPESUPER_UPGRADE_DESCRIPTION": "<style=cIsUtility>+10%</style> proc chance and <style=cIsUtility>+20%</style> crit multiplier",
 		"RAILGUNNERBODYCHARGESNIPECRYO_UPGRADE_DESCRIPTION": "<style=cIsUtility>+2s</style> frostfire burn and <style=cIsUtility>-10%</style> cooldown duration",
-		
+
 		"FIREHANDBEAM_UPGRADE_DESCRIPTION": "<style=cIsUtility>+1s</style> of slow on hit and <style=cIsUtility>+10%</style> damage \n\n<style=cIsVoid>[Corrupted]</style> \n<style=cIsUtility>+25%</style> range, <style=cIsUtility>+10%</style> damage and <style=cIsUtility>+15%</style> extra speed while in use",
         "CHARGEMEGABLASTER_UPGRADE_DESCRIPTION": "<style=cIsUtility>+15%</style> faster charge speed, <style=cIsUtility>+10%</style> damage and <style=cIsUtility>15%</style> bigger projectile \n\n<style=cIsVoid>[Corrupted]</style>\n<style=cIsUtility>+15%</style> damage and <style=cIsUtility>+10%</style> less cooldown ",
         "VOIDBLINKUP_UPGRADE_DESCRIPTION": "<style=cIsUtility>+50</style> armor for <style=cIsUtility>3</style> seconds\n\n<style=cIsVoid>[Corrupted]</style>\n<style=cIsUtility>20%</style> attack speed and <style=cIsUtility>20%</style> speed for <style=cIsUtility>+1</style> second",
         "CRUSHCORRUPTION_UPGRADE_DESCRIPTION": "<style=cIsUtility>+15%</style> extra health on use\n\n<style=cIsVoid>[Corrupted]</style>\n<style=cIsUtility>+15%</style> extra corruption on use",
-        		
+
 		"FIRECORRUPTBEAM_UPGRADE_DESCRIPTION": "<style=cIsUtility>+1s</style> of slow on hit and <style=cIsUtility>+10%</style> damage \n\n<style=cIsVoid>[Corrupted]</style> \n<style=cIsUtility>+25%</style> range, <style=cIsUtility>+10%</style> damage and <style=cIsUtility>+15%</style> extra speed while in use",
 		"FIRECORRUPTDISK_UPGRADE_DESCRIPTION": "<style=cIsUtility>+15%</style> faster charge speed, <style=cIsUtility>+10%</style> damage and <style=cIsUtility>15%</style> bigger projectile \n\n<style=cIsVoid>[Corrupted]</style>\n<style=cIsUtility>+15%</style> damage and <style=cIsUtility>+10%</style> less cooldown",
 		"VOIDBLINKDOWN_UPGRADE_DESCRIPTION": "<style=cIsUtility>+50</style> armor for <style=cIsUtility>3</style> seconds\n\n<style=cIsVoid>[Corrupted]</style>\n<style=cIsUtility>+20%</style> attack speed and <style=cIsUtility>+20%</style> move speed for <style=cIsUtility>+1</style> second",
@@ -153,12 +153,28 @@
 		"FALSESONLUNARSTAKE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
 		"FALSESONBODYLASERBURST_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
 
-		"CHEFDICE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
-		"CHEFSEAR_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"CHEFDICE_UPGRADE_DESCRIPTION": "<style="cIsUtility">+10m</style> extra cleaver distance, <style="cIsDamage">+25%</style> extra damage and <style="cIsUtility">+20%</style> returning cleaver size\n\n<style="cShrine">[Boosted]</style>\n<style="cIsDamage">+4</style> extra cleavers",
+		"CHEFSEAR_UPGRADE_DESCRIPTION": "<style="cIsHealing">+0.5%</style> health on hit and <style="cIsDamage">+25%</style> attack speed \n\n<style="cShrine">[Boosted]</style>\n<style="cIsDamage">+1</style> extra fireball",
 		"CHEFICEBOX_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
 		"CHEFROLYPOLY_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
-		"CHEFOILSPILL_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
-		"CHEFGLAZE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
-		"YESCHEF_UPGRADE_DESCRIPTION": "Not Yet Implemented...",            
+		"CHEFOILSPILL_UPGRADE_DESCRIPTION": "<style="cIsUtility">+2</style> oil jumps \n\n<style="cShrine">[Boosted]</style>\n<style="cIsUtility">+2</style> boosted oil jumps",
+		"CHEFGLAZE_UPGRADE_DESCRIPTION": "<style="cIsDamage">+3</style> extra oil globs",
+		"YESCHEF_UPGRADE_DESCRIPTION": "Temporarily increase <style="cIsUtility">skill points</style> of the next used skill by <style="cIsUtility">+1</style>.",
+
+		"BLUNTFORCE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"CLEANUP_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"REPOSSESS_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"SALVAGE_UPGRADE_DESCRIPTION": "<style="cIsUtility">+1 temporary item</style>",
+		"JUNKCUBE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"TORNADOSLAM_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"TINKER_UPGRADE_DESCRIPTION": "<style="cIsDamage">+25% projectile size and debuff duration</style>. Gain <style="cIsUtility">half a temporary item</style> when <style="cIsUtility">tinkering</style> with items every two levels.",
+
+        "FIRENANOPISTOL_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"COMMAND_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"DRONELEAP_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"DRONEBALL_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"COMMANDHEADBUTT_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"COMMANDSHIELDFORMATION_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
+		"DRONEBALLSHOOTABLE_UPGRADE_DESCRIPTION": "Not Yet Implemented...",
 	}
 }

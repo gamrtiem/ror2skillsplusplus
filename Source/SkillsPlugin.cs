@@ -20,12 +20,14 @@ using System.Linq;
 using System.Reflection;
 using MonoMod.RuntimeDetour;
 using Rewired.Data.Mapping;
+//using UnityHotReloadNS;
 
 namespace SkillsPlusPlus
 {
     [BepInDependency(R2API.R2API.PluginGUID)]
     [BepInDependency("com.KingEnderBrine.ExtendedLoadout", BepInDependency.DependencyFlags.SoftDependency)] //Soft-dependency to make Skills++ load after ExtendedLoadout
-    [BepInPlugin("com.cwmlolzlz.skills", "Skills", "0.6.3")]
+    [BepInPlugin("com.cwmlolzlz.skills", "Skills", "0.6.4")]
+    [BepInDependency("pseudopulse.Rebindables")]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod)]
     public sealed class SkillsPlugin : BaseUnityPlugin
     {
@@ -195,5 +197,16 @@ namespace SkillsPlusPlus
                 skillIcon.EnsureComponent<SkillLevelIconController>();
             }
         }
+        
+        // void Update()
+        // {
+        //     if (Input.GetKeyUp(KeyCode.F4))
+        //     {
+        //         UnityHotReload.LoadNewAssemblyVersion(
+        //             typeof(SkillsPlugin).Assembly, // The currently loaded assembly to replace.
+        //             System.IO.Path.Combine(System.IO.Path.GetDirectoryName(Info.Location), "Skills.dll")  // The path to the newly compiled DLL.
+        //         );
+        //     }
+        // }
     }
 }

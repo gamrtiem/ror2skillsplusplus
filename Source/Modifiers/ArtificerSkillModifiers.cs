@@ -142,6 +142,8 @@ namespace SkillsPlusPlus.Modifiers
     {
 
         private float baseRadius = 2f;
+        private float newRadius = 2f;
+        private float totalDamageCoeff = 20;
 
         public override void OnSkillEnter(Flamethrower skillState, int level)
         {
@@ -150,7 +152,8 @@ namespace SkillsPlusPlus.Modifiers
             skillState.maxDistance = MultScaling(skillState.maxDistance, 0.2f, level);
 
             Logger.Debug(skillState.flamethrowerEffectPrefab.transform.localScale);
-            skillState.flamethrowerEffectPrefab.transform.localScale = new Vector3(Flamethrower.radius, Flamethrower.radius, AdditiveScaling(1, 1, level));
+            skillState.totalDamageCoefficient = totalDamageCoeff;
+            skillState.flamethrowerEffectPrefab.transform.localScale = new Vector3(baseRadius, baseRadius, AdditiveScaling(1, 1, level));
             //if (skillState.flamethrowerEffectPrefab.TryGetComponent(out DestroyOnTimer timer)) {
             //    timer.duration = Flamethrower.baseFlamethrowerDuration;
             //}
@@ -160,11 +163,11 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
         {
             base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("Flamethrower stats - baseFlamethrowerDuration: {0}, totalDamageCoefficient: {1}, radius: {2}", Flamethrower.baseFlamethrowerDuration, Flamethrower.totalDamageCoefficient, Flamethrower.radius);
-            Flamethrower.radius = MultScaling(baseRadius, 0.25f, level);
+            Logger.Debug("Flamethrower stats - totalDamageCoefficient: {0}, radius: {1}", totalDamageCoeff, baseRadius);
+            baseRadius = MultScaling(2f, 0.25f, level);
             //Flamethrower.baseFlamethrowerDuration = AdditiveScaling(baseFlamethrowerDuration, 2, level);
-            Flamethrower.totalDamageCoefficient = MultScaling(20, 0.20f, level);
-            Logger.Debug("Flamethrower stats - baseFlamethrowerDuration: {0}, totalDamageCoefficient: {1}, radius: {2}", Flamethrower.baseFlamethrowerDuration, Flamethrower.totalDamageCoefficient, Flamethrower.radius);
+            totalDamageCoeff = MultScaling(20, 0.20f, level);
+            Logger.Debug("Flamethrower stats - totalDamageCoefficient: {0}, radius: {1}", totalDamageCoeff, baseRadius);
         }
 
     }

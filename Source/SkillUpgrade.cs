@@ -231,15 +231,3 @@ namespace SkillsPlusPlus {
 
     }
 }
-            if (state.outer) {
-                if (state.outer.TryGetComponent(out CharacterBody characterBody)) {
-                    if (characterBody.master && characterBody.master.gameObject.TryGetComponent(out MinionOwnership minion) && minion.ownerMaster) {
-                        // GetBody() isn't guaranteed to not return a null reference
-                        var masterBody = minion.ownerMaster.GetBody();
-                        if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwner in CharacterBody, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
-                } else if (state.outer.TryGetComponent(out MinionOwnership minionOwnership) && minionOwnership.ownerMaster) {
-                    var masterBody = minionOwnership.ownerMaster.GetBody();
-                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found MinionOwnership, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
-                } else if (state.outer.TryGetComponent(out Deployable deployable) && deployable.ownerMaster) {
-                    var masterBody = deployable.ownerMaster.GetBody(); // This isn't a gup, but knowing GetBody() can return null we should be checking it anyway
-                    if (bLogging) Logger.Debug(state.GetType().Name + ": Found Deployable, returning " + (masterBody?.GetDisplayName() ?? "[INVALID/REMOVED]"));
