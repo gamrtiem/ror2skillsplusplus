@@ -1,74 +1,129 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Text;
+using BepInEx.Configuration;
 using Rebindables;
-using MonoMod.RuntimeDetour;
-using Rewired;
-using Rewired.Data;
-using Rewired.Data.Mapping;
+using RiskOfOptions;
+using RiskOfOptions.OptionConfigs;
+using RiskOfOptions.Options;
 using RoR2;
-using RoR2.UI;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
-namespace SkillsPlusPlus
+namespace SkillsPlusPlus.Source
 {
     internal class SkillOptions
     {
         public static ModKeybind hotkey { get; set; }
-        internal static void SetupGameplayOptions()
+        public static ConfigEntry<int> levelsPerSkillPoint;
+        public static ConfigEntry<bool> disableInput;
+        public static ConfigEntry<bool> multScalingLinear;
+        public static ConfigEntry<bool> debugLogging;
+        public static ConfigEntry<List<string>> disabledSurvivors;
+        
+        public static void InitConfig()
         {
-            hotkey = RebindAPI.RegisterModKeybind(new ModKeybind(
-                "SKILLS_GAMEPAD_BUY_BTN", // language token for the name of your input in the menu
-                KeyCode.None, // the default keyboard binding for your input
-                16, // the default controller binding for your input
-                "Jump" // optional: if specified, your input will be placed after the corresponding vanilla input in the controls menu
-            ));
+            {
+                hotkey = RebindAPI.RegisterModKeybind(new ModKeybind(
+                    "SKILLS_GAMEPAD_BUY_BTN", 
+                    KeyCode.None, 
+                    16, 
+                    "Jump" 
+                ));
+            }
+            
+            {
+                levelsPerSkillPoint = SkillsPlugin.Instance.Config.Bind("Skills++",
+                    "Levels per skill point",
+                    5,
+                    "The number of levels to reach to be rewarded with a skillpoint. Changes will not be applied during a run. In multiplayer runs the host's setting is used");
+                ModSettingsManager.AddOption(new IntSliderOption(levelsPerSkillPoint, new IntSliderConfig
+                {
+                    max = 30,
+                    min = 1,
+                }));
+            }
 
-            // InputCatalog.actionToToken[hotkey] = "SKILLS_GAMEPAD_BUY_BTN";
-            // var userDataInit = typeof(UserData).GetMethod(nameof(UserData.gLOOAxUFAvrvUufkVjaYyZoeLbLE), BindingFlags.NonPublic | BindingFlags.Instance);
-            // new Hook(userDataInit, (Action<Action<UserData>, UserData>) AddCustomActions);
-            //
-            // On.RoR2.UI.SettingsPanelController.Start += (orig, self) =>
-            // {
-            //     orig(self);
-            //     SettingsPanelControllerAwake(self);
-            // };
+            {
+                disableInput = SkillsPlugin.Instance.Config.Bind("Skills++",
+                    "Disable Skills While Buying",
+                    true,
+                    "Should skills be disabled while the Buy Skills Input is pressed. (Disable this if you find yourself hitting the key by mistake)");
+                ModSettingsManager.AddOption(new CheckBoxOption(disableInput));
+            }
+
+            {
+                multScalingLinear = SkillsPlugin.Instance.Config.Bind("Skills++",
+                    "Linear Skill Multipliers",
+                    false,
+                    "Should Multiplicative (+%) skill values use a linear value rather than an exponential one. (Useful for playing with low \"Levels per skill point\" values). In multiplayer runs the host's setting is used");
+                ModSettingsManager.AddOption(new CheckBoxOption(multScalingLinear));
+            }
+
+            {
+                disabledSurvivors = SkillsPlugin.Instance.Config.Bind("Skills++",
+                    "Disabled Survivors",
+                    new List<string>(),
+                    "Survivors which shouldn't recieve skill upgrades. Can be modified in-game using the \"spp_disable_survivor\" and \"spp_enable_survivor\" commands respectively.");
+                ModSettingsManager.AddOption(new CheckBoxOption(debugLogging));
+            }
+            
+            {
+                debugLogging = SkillsPlugin.Instance.Config.Bind("Skills++",
+                    "Debug Logging",
+                    false,
+                    "Enables debug logging.");
+                ModSettingsManager.AddOption(new CheckBoxOption(debugLogging));
+            }
         }
         
-        //taken from extra skill slots sorr y!!!!
-        /*internal static void AddCustomActions(Action<UserData> orig, UserData self)
+        [ConCommand(commandName = "spp_disable_survivor", flags = ConVarFlags.None, helpText = "spp_disable_survivor <survivor name>\n  Disables Skills++ for the named survivor.")]
+        public static void CCDisableSurvivor(ConCommandArgs args)
         {
-            self.actions?.Add(hotkey);
-
-            var joystickMap = self.joystickMaps?.FirstOrDefault();
-            var keyboardMap = self.keyboardMaps?.FirstOrDefault();
+            if (args.Count < 1)
+            {
+                Debug.Log("Could not parse a survivor name. Did you specify a survivor name?");
+                return;
+            }
             
-            if (joystickMap != null && joystickMap.actionElementMaps.All(map => map.actionId != hotkey.ActionId))
+            string survivorName = args[0];
+            SurvivorDef[] survivorDefs = SurvivorCatalog.allSurvivorDefs.Where(surv => surv.cachedName == survivorName).ToArray();
+            if (survivorDefs.Length == 0)
             {
-                joystickMap.actionElementMaps.Add(hotkey.DefaultJoystickMap);
+                Debug.Log($"Could not find any survivor named {survivorName}. Are you sure you specified the internal survivor name?");
+                return;
             }
 
-            if (keyboardMap != null && keyboardMap.actionElementMaps.All(map => map.actionId != hotkey.ActionId))
+            SurvivorDef survivorDef = survivorDefs[0];
+            if (disabledSurvivors.Value.Contains(survivorDef.cachedName))
             {
-                keyboardMap.actionElementMaps.Add(hotkey.DefaultKeyboardMap);
+                Debug.Log($"{survivorDef.cachedName} has already been disabled.");
+                return;
             }
-
-            orig(self);
+            
+            disabledSurvivors.Value.Add(survivorDef.cachedName);
+            Debug.Log($"Disabled survivors: '{disabledSurvivors.Value}'"); 
         }
-        private static void SettingsPanelControllerAwake(SettingsPanelController settingsPanelController)
+
+        [ConCommand(commandName = "spp_enable_survivor", flags = ConVarFlags.None, helpText = "spp_enable_survivor <survivor name>\n  Re-enables Skills++ for the named survivor.")]
+        public static void CCEnableSurvivor(ConCommandArgs args)
         {
-            Logger.Debug(settingsPanelController.name);
-            if (settingsPanelController.name == "SettingsSubPanel, Controls (M&KB)" || settingsPanelController.name == "SettingsSubPanel, Controls (Gamepad)")
+            if (args.Count < 1)
             {
-                var jumpBindingTransform = settingsPanelController.transform.Find("Scroll View/Viewport/VerticalLayout/SettingsEntryButton, Binding (Jump)");
-                var inputBindingObject = Object.Instantiate(jumpBindingTransform, jumpBindingTransform.parent);
-                var inputBindingControl = inputBindingObject.GetComponent<InputBindingControl>();
-                
-                inputBindingControl.actionName = "SKILLS_GAMEPAD_BUY_BTN";
-                inputBindingControl.Awake();
-                Logger.Debug("added option !!");
+                Debug.Log("Could not parse a survivor name. Did you specify a survivor name?");
+                return;
             }
-        }*/
+            
+            string survivorName = args[0];
+            SurvivorDef[] survivorDefs = SurvivorCatalog.allSurvivorDefs.Where(surv => surv.cachedName == survivorName).ToArray();
+            if (survivorDefs.Length == 0)
+            {
+                Debug.Log($"Could not find any survivor named {survivorName}. Are you sure you specified the internal survivor name?");
+                return;
+            }
+            
+            disabledSurvivors.Value.Remove(survivorDefs[0].cachedName);
+            Debug.Log($"Disabled survivors: '{disabledSurvivors.Value}'");
+        }
     }
 }

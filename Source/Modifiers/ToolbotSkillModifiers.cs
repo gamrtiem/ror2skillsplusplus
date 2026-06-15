@@ -21,9 +21,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class ToolbotSkillModifier : SimpleSkillModifier<FireNailgun>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             NailgunFinalBurst.finalBurstBulletCount = AdditiveScaling(12, 4, level);
             FireNailgun.damageCoefficient = MultScaling(0.7f, 0.20f, level);
             NailgunFinalBurst.damageCoefficient = MultScaling(0.7f, 0.20f, level);
@@ -38,18 +38,18 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(BaseState skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
-            Logger.Debug("skillState: {0}", skillState);
+            Logger.Debug($"skillState: {skillState}");
             if (skillState is FireSpear fireSpear)
             {
-                Logger.Debug("baseDuration: {0}", fireSpear.baseDuration);
+                Logger.Debug($"baseDuration: {fireSpear.baseDuration}");
                 fireSpear.baseDuration = MultScaling(fireSpear.baseDuration, -0.15f, level);
                 fireSpear.damageCoefficient = MultScaling(fireSpear.damageCoefficient, 0.10f, level);
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             CooldownSpear.baseDuration = MultScaling(0.7f, -0.15f, level);
         }
     }
@@ -70,9 +70,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             int stocks = AdditiveScaling(4, 1, level);
 
             skillDef.baseMaxStock = stocks;
@@ -162,10 +162,10 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("baseFireFrequency: {0}", FireBuzzsaw.baseFireFrequency);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            Logger.Debug($"baseFireFrequency: {FireBuzzsaw.baseFireFrequency}");
             FireBuzzsaw.damageCoefficientPerSecond = MultScaling(10, 0.20f, level);
             FireBuzzsaw.baseFireFrequency = MultScaling(10, 0.20f, level);
         }
@@ -178,7 +178,7 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(AimStunDrone aimStunDrone, int level)
         {
             base.OnSkillEnter(aimStunDrone, level);
-            Logger.Debug("damageCoefficient: {0}, baseMinimumDuration: {1}, maxDistance: {2}", aimStunDrone.damageCoefficient, aimStunDrone.baseMinimumDuration, aimStunDrone.maxDistance);
+            Logger.Debug($"damageCoefficient: {aimStunDrone.damageCoefficient}, baseMinimumDuration: {aimStunDrone.baseMinimumDuration}, maxDistance: {aimStunDrone.maxDistance}");
             aimStunDrone.maxDistance = MultScaling(aimStunDrone.maxDistance, 0.4f, level); // 2 * 20%
             if (aimStunDrone.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
             {
@@ -204,15 +204,15 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(ToolbotDash toolbotDash, int level)
         {
             base.OnSkillEnter(toolbotDash, level);
-            Logger.Debug("baseDuration: {0}, speedMultiplier: {2}, chargeDamageCoefficient: {5}, knockbackForce: {1}, knockbackDamageCoefficient: {3}, massThresholdForKnockback: {4}", toolbotDash.baseDuration, ToolbotDash.knockbackForce, toolbotDash.speedMultiplier, ToolbotDash.knockbackDamageCoefficient, ToolbotDash.massThresholdForKnockback, ToolbotDash.chargeDamageCoefficient);
+            Logger.Debug($"baseDuration: {toolbotDash.baseDuration}, speedMultiplier: {toolbotDash.speedMultiplier}, chargeDamageCoefficient: {ToolbotDash.chargeDamageCoefficient}, knockbackForce: {ToolbotDash.knockbackForce}, knockbackDamageCoefficient: {ToolbotDash.knockbackDamageCoefficient}, massThresholdForKnockback: {ToolbotDash.massThresholdForKnockback}");
             // baseDuration: 2, speedMultiplier: 2.2, knockbackForce: 8000, knockbackDamageCoefficient: 10, massThresholdForKnockback: 250
             toolbotDash.baseDuration = MultScaling(toolbotDash.baseDuration, 0.10f, level);
             toolbotDash.speedMultiplier = MultScaling(2.2f, 0.10f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             ToolbotDash.chargeDamageCoefficient = MultScaling(2.5f, 0.30f, level);
             ToolbotDash.knockbackDamageCoefficient = MultScaling(10, 0.30f, level);
             ToolbotDash.massThresholdForKnockback = MultScaling(250, 0.3f, level);
@@ -227,7 +227,7 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(ToolbotStanceSwap toolbotStanceSwap, int level)
         {
             base.OnSkillEnter(toolbotStanceSwap, level);
-            Logger.Debug("baseDuration: {0}", toolbotStanceSwap.GetFieldValue<float>("baseDuration"));
+            Logger.Debug($"baseDuration: {toolbotStanceSwap.baseDuration}");
             // toolbotStanceSwap.SetFieldValue("baseDuration", MultScaling(0.4f, -0.25f, level));
         }
 
@@ -270,9 +270,9 @@ namespace SkillsPlusPlus.Modifiers
 
 
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             armorBonus = AdditiveScaling(0, 25, level);
             damageBonus = AdditiveScaling(0, 0.15f, level);
             moveSpeedBonus = AdditiveScaling(0, 1f, level);

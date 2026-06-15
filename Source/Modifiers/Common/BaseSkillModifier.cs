@@ -50,7 +50,7 @@ namespace SkillsPlusPlus.Modifiers
         /// <param name="level">The current level of the associated skill</param>
         public virtual void OnSkillEnter(BaseState skillState, int level)
         {
-            Logger.Debug("{0}.OnSkillEnter({1}, {2})", this.GetType().Name, skillState, level);
+            Logger.Debug($"{GetType().Name}.OnSkillEnter({skillState}, {level})");
         }
 
         /// <summary>
@@ -60,19 +60,19 @@ namespace SkillsPlusPlus.Modifiers
         /// <param name="level">The current level of the associated skill</param>
         public virtual void OnSkillExit(BaseState skillState, int level)
         {
-            Logger.Debug("{0}.OnSkillExit({1}, {2})", this.GetType().Name, skillState, level);
+            Logger.Debug($"{GetType().Name}.OnSkillExit({skillState}, {level})");
         }
 
         /// <summary>
         /// Called when the player spends a skill point one of the listed entity state types
         /// </summary>
         /// <param name="level">The new level of the skill</param>
-        /// <param name="characterBody">The player's character body</param>
+        /// <param name="characterBodyLevelup">The player's character body</param>
         /// <param name="skillDef">The associated skill definition</param>
-        public virtual void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public virtual void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            Logger.Debug("{0}.OnSkillLeveledUp({1}, {2}, {3})", this.GetType().Name, level, characterBody, skillDef);
-            FindSkillUpgrade(characterBody, "blank", true);
+            Logger.Debug($"{GetType().Name}.OnSkillLeveledUp({level}, {characterBodyLevelup}, {skillDef})");
+            FindSkillUpgrade(characterBodyLevelup, "blank", true);
 
             bMultScalingLinear = (bool)registeredSkill?.skillPointsController?.multScalingLinear;
         }
@@ -93,7 +93,7 @@ namespace SkillsPlusPlus.Modifiers
         internal void ReportBroken(params String[] fields)
         {
             var fieldInfo = String.Join(",", fields);
-            Logger.Warn("Skill {0} is broken. Cannot access the following items: {1}", this.GetType().FullName, fieldInfo);
+            Logger.Warning($"Skill {GetType().FullName} is broken. Cannot access the following items: {fieldInfo}");
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace SkillsPlusPlus.Modifiers
 
             if (registeredSkill == null)
             {
-                Logger.Warn("Could not find {0}'s Skill Upgrade", baseSkillName);
+                Logger.Warning($"Could not find {baseSkillName}'s Skill Upgrade");
             }
         }
 

@@ -14,7 +14,7 @@ namespace SkillsPlusPlus.Modifiers
         {
             this.skillNames = new string[0];
             this.baseStateTypes = new Type[0];
-            Logger.Warn("Skill modifier for {0} is using a older version of the Skills++ API and cannot be loaded. Please notify the author to update their dependancies", name);
+            Logger.Warning($"Skill modifier for {name} is using a older version of the Skills++ API and cannot be loaded. Please notify the author to update their dependancies");
         }
 
         public SkillLevelModifierAttribute(string skillName, params Type[] stateTypes)

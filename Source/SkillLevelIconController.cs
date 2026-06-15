@@ -3,6 +3,7 @@ using Rewired;
 using RiskOfOptions;
 using RoR2;
 using RoR2.UI;
+using SkillsPlusPlus.Source;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -187,8 +188,8 @@ namespace SkillsPlusPlus
                                     skillAction = RewiredConsts.Action.SpecialSkill;
                                     break;
                             }
-                            UpgradeButton.SetActive(canBuySkill && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputBank.GetButtonState(SkillOptions.hotkey).down) || inputPlayer.GetButton(RewiredConsts.Action.Info));
-                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && (ConVars.ConVars.buySkillsKeybind.IsPressedInclusive() || inputBank.GetButtonState(SkillOptions.hotkey).down))
+                            UpgradeButton.SetActive(canBuySkill && inputBank.GetButtonState(SkillOptions.hotkey).down || inputPlayer.GetButton(RewiredConsts.Action.Info));
+                            if (skillAction != 0 && inputPlayer.GetButtonDown(skillAction) && inputBank.GetButtonState(SkillOptions.hotkey).down)
                             {
                                 this.OnBuySkill();
                             }

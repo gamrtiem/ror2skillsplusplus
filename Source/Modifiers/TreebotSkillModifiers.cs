@@ -13,9 +13,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class TreebotSyringeSkillModifier : SimpleSkillModifier<FireSyringe>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             FireSyringe.projectileCount = AdditiveScaling(3, 1, level);
             FireSyringe.totalYawSpread = AdditiveScaling(1, 0.1f, level);
             FireSyringe.damageCoefficient = MultScaling(0.8f, 0.1f, level);
@@ -63,9 +63,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
 
@@ -75,9 +75,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class TreebotMortar2SkillModifier : SimpleSkillModifier<AimMortar2>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             var radius = MultScaling(5, 0.2f, level);
             if (FireMortar2.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
             {
@@ -119,9 +119,9 @@ namespace SkillsPlusPlus.Modifiers
             skillState.fieldOfView = MultScaling(skillState.fieldOfView, 0.20f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             FirePlantSonicBoom.damageCoefficient = MultScaling(5.5f, 0.20f, level);
         }
     }
@@ -144,9 +144,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             TreebotFlower2Projectile.radius = MultScaling(15, 0.20f, level);
             TreebotFlower2Projectile.healPulseCount = (int)MultScaling(16, 0.1f, level);
         }
@@ -186,9 +186,9 @@ namespace SkillsPlusPlus.Modifiers
             base.OnSkillEnter(skillState, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (!seedSkill)
             {

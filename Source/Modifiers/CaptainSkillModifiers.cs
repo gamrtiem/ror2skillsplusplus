@@ -38,9 +38,9 @@ namespace SkillsPlusPlus.Modifiers
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             if (FireTazer.projectilePrefab.TryGetComponent(out ProjectileImpactExplosion projectileImpactExplosion))
             {
                 projectileImpactExplosion.blastRadius = MultScaling(2, 0.4f, level);
@@ -82,9 +82,9 @@ namespace SkillsPlusPlus.Modifiers
         private static float fuseDuration;
         private static SkillUpgrade diabloSkill;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (!diabloSkill)
             {
@@ -244,9 +244,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             if (HealZoneMainState.healZonePrefab.TryGetComponent(out HealingWard healingWard))
             {
                 var healRadius = MultScaling(10, 0.2f, level);

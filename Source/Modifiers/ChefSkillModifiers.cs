@@ -25,9 +25,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     {
         private int locallevel;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void SetupSkill()
@@ -153,9 +153,9 @@ namespace SkillsPlusPlus.Source.Modifiers
         
         private DamageTypeCombo BoostedSearDamageTypeCombo = new DamageTypeCombo(DamageType.IgniteOnHit, DamageTypeExtended.ChefSource | DamageTypeExtended.IgniteChefOilBoosted, DamageSource.Secondary);
         
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -259,9 +259,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     class ChefRolyPolySkillModifier : BaseSkillModifier
     {
         //maybe make last longer + faster charge ?
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -324,9 +324,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     class ChefGlazeSkillModifier : BaseSkillModifier
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -352,9 +352,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     {
         public static BuffDef levelupBuff;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -444,9 +444,9 @@ namespace SkillsPlusPlus.Source.Modifiers
             return origpsrite == null ? self.icons[0] : origpsrite;
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)
@@ -492,9 +492,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     class ChefIceBoxSkillModifier : BaseSkillModifier
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void OnSkillEnter(BaseState skillState, int level)

@@ -23,17 +23,17 @@ namespace SkillsPlusPlus.Modifiers
             //skillState.orbProcCoefficient;
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if (characterBody.TryGetComponent(out HuntressTracker huntressTracker))
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            if (characterBodyLevelup.TryGetComponent(out HuntressTracker huntressTracker))
             {
                 huntressTracker.maxTrackingDistance = MultScaling(60, 0.2f, level);
                 huntressTracker.maxTrackingAngle = Math.Min(70, AdditiveScaling(30, 5, level)); // 16%
             }
             else
             {
-                Logger.Warn("Could not locate the HuntressTracker component on {0}", characterBody);
+                Logger.Warning($"Could not locate the HuntressTracker component on {characterBodyLevelup}");
             }
         }
     }
@@ -50,21 +50,21 @@ namespace SkillsPlusPlus.Modifiers
             // FireFlurrySeekingArrow.baseArrowReloadDuration = AdditiveScaling(6, 2, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             // when the flurry crits it uses the following number of arrows
-            Logger.Debug("critMaxArrowCount: {0}, critBaseArrowReloadDuration: {1}", FireFlurrySeekingArrow.critMaxArrowCount, FireFlurrySeekingArrow.critBaseArrowReloadDuration);
+            Logger.Debug($"critMaxArrowCount: {FireFlurrySeekingArrow.critMaxArrowCount}, critBaseArrowReloadDuration: {FireFlurrySeekingArrow.critBaseArrowReloadDuration}");
 
             FireFlurrySeekingArrow.critMaxArrowCount = AdditiveScaling(6, 2, level);
-            if (characterBody.TryGetComponent(out HuntressTracker huntressTracker))
+            if (characterBodyLevelup.TryGetComponent(out HuntressTracker huntressTracker))
             {
                 huntressTracker.maxTrackingDistance = MultScaling(60, 0.10f, level);
                 huntressTracker.maxTrackingAngle = Math.Min(70, AdditiveScaling(30, 5, level)); // 16%
             }
             else
             {
-                Logger.Warn("Could not locate the HuntressTracker component on {0}", characterBody);
+                Logger.Warning($"Could not locate the HuntressTracker component on {characterBodyLevelup}");
             }
         }
     }
@@ -77,15 +77,15 @@ namespace SkillsPlusPlus.Modifiers
             // R2API.LanguageAPI.Add("HUNTRESS_SECONDARY_DESCRIPTION", "Throw a seeking glaive that bounces up to <style=cIsDamage>6 (+2)</style> times for <style=cIsDamage>250% damage</style>. Damage increases by <style=cIsDamage>10% (+2.5%)</style> per bounce.");
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("OnSkillLeveledUp(level: {0})", level);
-            Logger.Debug("Glaive stats - max bounces: {0}, damage coefficient: {1}, glaiveBounceRange: {2}", ThrowGlaive.maxBounceCount, ThrowGlaive.damageCoefficientPerBounce, ThrowGlaive.glaiveBounceRange);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            Logger.Debug($"OnSkillLeveledUp(level: {level})");
+            Logger.Debug($"Glaive stats - max bounces: {ThrowGlaive.maxBounceCount}, damage coefficient: {ThrowGlaive.damageCoefficientPerBounce}, glaiveBounceRange: {ThrowGlaive.glaiveBounceRange}");
             ThrowGlaive.maxBounceCount = AdditiveScaling(6, 1, level);
             ThrowGlaive.damageCoefficient = MultScaling(2.5f, 0.1f, level);
             ThrowGlaive.glaiveBounceRange = AdditiveScaling(35, 10, level);
-            Logger.Debug("Glaive stats - max bounces: {0}, damage coefficient: {1}, glaiveBounceRange: {2}", ThrowGlaive.maxBounceCount, ThrowGlaive.damageCoefficientPerBounce, ThrowGlaive.glaiveBounceRange);
+            Logger.Debug($"Glaive stats - max bounces: {ThrowGlaive.maxBounceCount}, damage coefficient: {ThrowGlaive.damageCoefficientPerBounce}, glaiveBounceRange: {ThrowGlaive.glaiveBounceRange}");
         }
 
     }
@@ -116,10 +116,10 @@ namespace SkillsPlusPlus.Modifiers
             // R2API.LanguageAPI.Add("HUNTRESS_SPECIAL_DESCRIPTION", "<style=cIsUtility>Teleport</style> into the sky. Target a <style=cIsDamage>7.5 unit (+2.5)</style> radius area to rain arrows, <style=cIsUtility>slowing</style> all enemies and dealing <style=cIsDamage>225% (+%25) damage per second</style>.");
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("ArrowRain stats - arrowRainRadius: {0}, damageCoefficient: {1}, prefabScale {2}", ArrowRain.arrowRainRadius, ArrowRain.damageCoefficient, ArrowRain.projectilePrefab.transform.localScale);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            Logger.Debug($"ArrowRain stats - arrowRainRadius: {ArrowRain.arrowRainRadius}, damageCoefficient: {ArrowRain.damageCoefficient}, prefabScale {ArrowRain.projectilePrefab.transform.localScale}");
             ArrowRain.arrowRainRadius = MultScaling(7.5f, 0.25f, level);
             ArrowRain.damageCoefficient = MultScaling(2.2f, 0.2f, level);
 
@@ -143,13 +143,13 @@ namespace SkillsPlusPlus.Modifiers
             if (skillState is FireArrowSnipe snipeState)
             {
                 snipeState.damageCoefficient = MultScaling(snipeState.damageCoefficient, 0.2f, level);
-                Logger.Debug("damageCoefficient: {0}", snipeState.damageCoefficient);
+                Logger.Debug($"damageCoefficient: {snipeState.damageCoefficient}");
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             int stocks = AdditiveScaling(3, 1, level);
             AimArrowSnipe.primarySkillDef.baseMaxStock = stocks;
             if (AimArrowSnipe.crosshairOverridePrefab.TryGetComponent(out CrosshairController crosshairController))

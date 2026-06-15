@@ -49,7 +49,7 @@ namespace SkillsPlusPlus.Modifiers
                         default:
                             if (!HereticSupportedPassiveUpgrades.Contains(upgrade.targetGenericSkill.name) && !HereticSkillsWarned.Contains(upgrade.targetGenericSkill.name))
                             {
-                                Logger.Warn("Heretic Skill {0} found but no bonuses may have been applied. If this skill is supported by SkillsPlusPlus, please add it to LunarModifiers.HereticSupportedPassiveUpgrades!", upgrade.targetGenericSkill.name);
+                                Logger.Warning($"Heretic Skill {upgrade.targetGenericSkill.name} found but no bonuses may have been applied. If this skill is supported by SkillsPlusPlus, please add it to LunarModifiers.HereticSupportedPassiveUpgrades!");
                                 HereticSkillsWarned.Add(upgrade.targetGenericSkill.name);
                             }
                             break;
@@ -62,9 +62,9 @@ namespace SkillsPlusPlus.Modifiers
         internal class VisionsOfHeresySkillModifier : SimpleSkillModifier<FireLunarNeedle>
         {
 
-            public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+            public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
             {
-                base.OnSkillLeveledUp(level, characterBody, skillDef);
+                base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
                 skillDef.baseMaxStock = 12 + (2 * level);
                 FireLunarNeedle.damageCoefficient = MultScaling(0.05f, 0.2f, level);
@@ -130,9 +130,9 @@ namespace SkillsPlusPlus.Modifiers
         internal class StridesOfHeresySkillModifier : SimpleSkillModifier<GhostUtilitySkillState>
         {
 
-            public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+            public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
             {
-                base.OnSkillLeveledUp(level, characterBody, skillDef);
+                base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
                 GhostUtilitySkillState.moveSpeedCoefficient = MultScaling(1.3f, 0.1f, level); // +10% 
                 GhostUtilitySkillState.healFrequency = MultScaling(5, 0.15f, level); // +15%
@@ -150,9 +150,9 @@ namespace SkillsPlusPlus.Modifiers
             private static float baseDamageCoefficient = 0f;
             private static SkillUpgrade heartSkill;
 
-            public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+            public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
             {
-                base.OnSkillLeveledUp(level, characterBody, skillDef);
+                base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
                 if (!heartSkill)
                 {

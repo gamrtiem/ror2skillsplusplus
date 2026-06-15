@@ -20,6 +20,9 @@ using System.Linq;
 using System.Reflection;
 using MonoMod.RuntimeDetour;
 using Rewired.Data.Mapping;
+using SkillsPlusPlus.Source;
+using UnityEngine.AddressableAssets;
+
 //using UnityHotReloadNS;
 
 namespace SkillsPlusPlus
@@ -28,10 +31,9 @@ namespace SkillsPlusPlus
     [BepInDependency("com.KingEnderBrine.ExtendedLoadout", BepInDependency.DependencyFlags.SoftDependency)] //Soft-dependency to make Skills++ load after ExtendedLoadout
     [BepInPlugin("com.cwmlolzlz.skills", "Skills", "0.6.4")]
     [BepInDependency("pseudopulse.Rebindables")]
-    [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod)]
     public sealed class SkillsPlugin : BaseUnityPlugin
     {
-        public static SkillsPlugin Instance = null;
+        public static SkillsPlugin Instance;
 
         private void Awake()
         {
@@ -41,29 +43,18 @@ namespace SkillsPlusPlus
             //  \___ \ | |/ /| || || |/ __||_   _||_   _|
             //  ____) ||   < | || || |\__ \  |_|    |_|
             // |_____/ |_|\_\|_||_||_||___/
-#if DEBUG
-            //enable logger.debug for debug
-            SkillsPlusPlus.Logger.LOG_LEVEL = SkillsPlusPlus.Logger.LogLevel.Debug;
-            UnityEngine.Networking.LogFilter.currentLogLevel = LogFilter.Debug;
-
-            //unlock all for debug
-            On.RoR2.Stats.StatSheet.HasUnlockable += (orig, self, def) =>
-            {
-                return true;
-            };
-#endif
-
+            SkillsPlusPlus.Logger.Init(Logger);
             Instance = this;
 
             //this is required to ensure that you can actually upgrade skills .,.,
-            GameObject playerMasterPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/CommandoMaster");
-            playerMasterPrefab.EnsureComponent<SkillPointsController>();
-            
-            //ensure hotkeys are properly setup 
-            
+            //GameObject playerMasterPrefab = LegacyResourcesAPI.Load<GameObject>("prefabs/charactermasters/CommandoMaster");
+            Addressables.LoadAssetAsync<GameObject>(RoR2BepInExPack.GameAssetPaths.Version_1_39_0.RoR2_Base_Core.PlayerMaster_prefab).Completed += handle =>
+            {
+                handle.Result.EnsureComponent<SkillPointsController>();
+            };
             
             SkillModifierManager.LoadSkillModifiers();
-            SkillOptions.SetupGameplayOptions();
+            SkillOptions.InitConfig();
 
             R2API.RecalculateStatsAPI.GetStatCoefficients += LunarModifiers.RecalculateStats_GetLunarStats;
 
@@ -71,8 +62,6 @@ namespace SkillsPlusPlus
 
             On.RoR2.UI.TooltipController.SetTooltipProvider += TooltipController_SetTooltipProvider;
             On.RoR2.UI.LoadoutPanelController.Row.FromSkillSlot += Row_FromSkillSlot;
-
-            InitConfig();
         }
 
         private static void TooltipController_SetTooltipProvider(On.RoR2.UI.TooltipController.orig_SetTooltipProvider orig, TooltipController self, TooltipProvider provider)
@@ -96,7 +85,7 @@ namespace SkillsPlusPlus
 
             for (int i = 0; i < buttons.Count; i++)
             {
-                SkillsPlusPlus.Logger.Debug("Ensuring SkillsPlusPlusTooltipProvider({0})", i);
+                SkillsPlusPlus.Logger.Debug($"Ensuring SkillsPlusPlusTooltipProvider({i})");
                 var button = buttons[i];
                 var skillDef = skillSlot?.skillFamily?.variants[i].skillDef;
                 if (skillDef != null)
@@ -108,53 +97,6 @@ namespace SkillsPlusPlus
             }
 
             return row;
-        }
-
-        private void InitConfig()
-        {
-            {
-                var levelsPerSkillPoint = Config.Bind("Skills++",
-                    "Levels per skill point",
-                    5f,
-                    "The number of levels to reach to be rewarded with a skillpoint. Changes will not be applied during a run. In multiplayer runs the host's setting is used");
-
-                levelsPerSkillPoint.SettingChanged += (sender, args) => ConVars.ConVars.levelsPerSkillPoint.value = Mathf.RoundToInt(levelsPerSkillPoint.Value);
-
-                ConVars.ConVars.levelsPerSkillPoint.value = Mathf.RoundToInt(levelsPerSkillPoint.Value);
-
-                ModSettingsManager.AddOption(new SliderOption(levelsPerSkillPoint, new SliderConfig
-                {
-                    max = 50,
-                    min = 1,
-                    FormatString = "{0:0}"
-                }));
-            }
-
-            {
-                var disableInput = Config.Bind("Skills++",
-                    "Disable Skills While Buying",
-                    true,
-                    "Should skills be disabled while the Buy Skills Input is pressed. (Disable this if you find yourself hitting the key by mistake)");
-
-                disableInput.SettingChanged += (sender, args) => ConVars.ConVars.disableOnBuy.value = disableInput.Value;
-
-                ConVars.ConVars.disableOnBuy.value = disableInput.Value;
-
-                ModSettingsManager.AddOption(new CheckBoxOption(disableInput));
-            }
-
-            {
-                var multScalingLinear = Config.Bind("Skills++",
-                    "Linear Skill Multipliers",
-                    false,
-                    "Should Multiplicative (+%) skill values use a linear value rather than an exponential one. (Useful for playing with low \"Levels per skill point\" values). In multiplayer runs the host's setting is used");
-
-                multScalingLinear.SettingChanged += (sender, args) => ConVars.ConVars.multScalingLinear.value = multScalingLinear.Value;
-
-                ConVars.ConVars.multScalingLinear.value = multScalingLinear.Value;
-
-                ModSettingsManager.AddOption(new CheckBoxOption(multScalingLinear));
-            }
         }
 
         [SystemInitializer(typeof(SurvivorCatalog))]

@@ -134,9 +134,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     class DrifterSalvageSkillModifier : BaseSkillModifier
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void SetupSkill()
@@ -185,9 +185,9 @@ namespace SkillsPlusPlus.Source.Modifiers
     class DrifterTinkerSkillModifier : BaseSkillModifier
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
 
         public override void SetupSkill()

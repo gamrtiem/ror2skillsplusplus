@@ -45,9 +45,9 @@ namespace SkillsPlusPlus.Modifiers
             base.OnSkillEnter(skillState, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             if (Mathf.Abs(baseUpwardVelocity) < 0.01f)
             {
                 baseUpwardVelocity = PreGroundSlam.upwardVelocity;
@@ -111,10 +111,10 @@ namespace SkillsPlusPlus.Modifiers
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            if (characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            if (characterBodyLevelup.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
             {
                 hookCrosshairController.range = MultScaling(80, 0.30f, level);
             }
@@ -135,15 +135,15 @@ namespace SkillsPlusPlus.Modifiers
                 grappleController.maxTravelDistance = MultScaling(80, 0.15f, level);
             }
         }
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (Mathf.Abs(baseDamageCoeff) < 0.1f)
             {
                 baseDamageCoeff = FireYankHook.damageCoefficient;
             }
-            if (characterBody.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
+            if (characterBodyLevelup.defaultCrosshairPrefab.TryGetComponent(out LoaderHookCrosshairController hookCrosshairController))
             {
                 hookCrosshairController.range = MultScaling(80, 0.15f, level);
             }
@@ -175,9 +175,9 @@ namespace SkillsPlusPlus.Modifiers
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             BaseSwingChargedFist.velocityDamageCoefficient = MultScaling(0.3f, 0.20f, level);
         }
 
@@ -202,9 +202,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             Logger.Debug(SwingZapFist.selfKnockback);
             SwingZapFist.selfKnockback = MultScaling(7000, 0.015f, level); // +10% knockback
             if (SwingZapFist.overchargeImpactEffectPrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController))
@@ -230,10 +230,10 @@ namespace SkillsPlusPlus.Modifiers
             base.OnSkillEnter(skillState, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("baseDuration: {0}, damageCoefficient: {1}", ThrowPylon.baseDuration, ThrowPylon.damageCoefficient);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            Logger.Debug($"baseDuration: {ThrowPylon.baseDuration}, damageCoefficient: {ThrowPylon.damageCoefficient}");
             ThrowPylon.damageCoefficient = MultScaling(1.0f, 0.2f, level);
             if (ThrowPylon.projectilePrefab.TryGetComponent(out ProjectileProximityBeamController proximityBeamController))
             {

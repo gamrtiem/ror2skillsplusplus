@@ -14,18 +14,18 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(Slash slash, int level)
         {
             base.OnSkillEnter(slash, level);
-            Logger.Debug("hitPauseDuration: {0}, damageCoefficient: {1}", slash.hitPauseDuration, slash.damageCoefficient);
+            Logger.Debug($"hitPauseDuration: {slash.hitPauseDuration}, damageCoefficient: {slash.damageCoefficient}");
             slash.hitPauseDuration = MultScaling(slash.hitPauseDuration, -0.1f, level);
             slash.baseDuration = MultScaling(slash.baseDuration, -0.15f, level);
             slash.damageCoefficient = MultScaling(slash.damageCoefficient, 0.20f, level);
-            Logger.Debug("hitPauseDuration: {0}, damageCoefficient: {1}", slash.hitPauseDuration, slash.damageCoefficient);
+            Logger.Debug($"hitPauseDuration: {slash.hitPauseDuration}, damageCoefficient: {slash.damageCoefficient}");
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            Logger.Debug("baseDurationBeforeInterruptable: {0}", Slash.baseDurationBeforeInterruptable);
-            Logger.Debug("comboFinisherDamageCoefficient: {0}, comboFinisherBaseDurationBeforeInterruptable: {1}", Slash.comboFinisherDamageCoefficient, Slash.comboFinisherBaseDurationBeforeInterruptable);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            Logger.Debug($"baseDurationBeforeInterruptable: {Slash.baseDurationBeforeInterruptable}");
+            Logger.Debug($"comboFinisherDamageCoefficient: {Slash.comboFinisherDamageCoefficient}, comboFinisherBaseDurationBeforeInterruptable: {Slash.comboFinisherBaseDurationBeforeInterruptable}");
             Slash.comboFinisherDamageCoefficient = MultScaling(4, 0.25f, level); // combined with +25% of damage bonus this is effectively 50% for the final attack
         }
 
@@ -46,9 +46,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             skillDef.baseMaxStock = (int)AdditiveScaling(1, 0.5f, level);
         }
 
@@ -65,9 +65,9 @@ namespace SkillsPlusPlus.Modifiers
             bite.damageCoefficient = MultScaling(bite.damageCoefficient, 0.20f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             skillDef.baseMaxStock = AdditiveScaling(1, 1, level);
         }
     }
@@ -82,9 +82,9 @@ namespace SkillsPlusPlus.Modifiers
             leap.blastDamageCoefficient = MultScaling(leap.blastDamageCoefficient, 0.20f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             skillDef.baseMaxStock = (int)AdditiveScaling(2, 0.5f, level);
             if (Leap.projectilePrefab.TryGetComponent(out ProjectileDotZone dotZone))
             {
@@ -112,9 +112,9 @@ namespace SkillsPlusPlus.Modifiers
             skillState.blastBonusForce = skillState.blastBonusForce * MultScaling(1, 0.25f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             // 0.5s extra cooldown per level
             ChainableLeap.refundPerHit = MultScaling(2, 0.15f, level);
@@ -132,9 +132,9 @@ namespace SkillsPlusPlus.Modifiers
             fireDisease.damageCoefficient = MultScaling(fireDisease.damageCoefficient, 0.20f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             Disease.maxBounces = AdditiveScaling(20, 5, level);
             Disease.bounceRange = MultScaling(25, 0.20f, level);
         }

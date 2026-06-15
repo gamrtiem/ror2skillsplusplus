@@ -14,9 +14,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class GroundLightSkillModifier : SimpleSkillModifier<GroundLight>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             GroundLight.forceMagnitude = MultScaling(600, 0.20f, level);
             GroundLight.selfForceMagnitude = MultScaling(600, 0.20f, level);
             GroundLight.comboDamageCoefficient = MultScaling(1.3f, 0.2f, level);
@@ -31,9 +31,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class GroundLight2SkillModifier : SimpleSkillModifier<GroundLight2>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             // all swings in the combo fall under the same coefficients as of RoR2 1.0
             GroundLight2.baseDurationBeforeInterruptable = MultScaling(0.45f, -0.15f, level);
@@ -45,7 +45,7 @@ namespace SkillsPlusPlus.Modifiers
         public override void OnSkillEnter(GroundLight2 skillState, int level)
         {
             base.OnSkillEnter(skillState, level);
-            Logger.Debug("damageCoefficient: {0}, baseDuration: {1}", skillState.damageCoefficient, skillState.baseDuration);
+            Logger.Debug($"damageCoefficient: {skillState.damageCoefficient}, baseDuration: {skillState.baseDuration}");
             skillState.baseDuration = MultScaling(0.6f, -.15f, level);
             skillState.damageCoefficient = MultScaling(1.3f, 0.2f, level);
         }
@@ -88,9 +88,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class UppercutSkillModifier : SimpleSkillModifier<Uppercut>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             Uppercut.baseDamageCoefficient = MultScaling(5.5f, 0.25f, level);
             skillDef.baseMaxStock = (int)AdditiveScaling(1, 0.5f, level);
         }
@@ -101,9 +101,9 @@ namespace SkillsPlusPlus.Modifiers
     internal class AssaultSkillModifier : SimpleSkillModifier<Assaulter>
     {
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             Assaulter.damageCoefficient = MultScaling(3, 0.2f, level);
 
@@ -122,13 +122,13 @@ namespace SkillsPlusPlus.Modifiers
         private Transform assaultHitbox;
         private Vector3 originalHitboxScale;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (!assaultHitbox)
             {
-                HitBoxGroup[] hitboxGroups = characterBody.modelLocator.modelTransform.GetComponents<HitBoxGroup>();
+                HitBoxGroup[] hitboxGroups = characterBodyLevelup.modelLocator.modelTransform.GetComponents<HitBoxGroup>();
 
                 foreach (HitBoxGroup group in hitboxGroups)
                 {
@@ -200,9 +200,9 @@ namespace SkillsPlusPlus.Modifiers
             }
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             if (skillDef.activationState.stateType == typeof(EvisDash))
             {
                 Evis.maxRadius = MultScaling(16, 0.3f, level);

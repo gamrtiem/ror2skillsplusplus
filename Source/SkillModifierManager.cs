@@ -29,7 +29,7 @@ namespace SkillsPlusPlus
             foreach (Type type in assembly.GetTypes())
             {
                 var attributes = type.GetCustomAttributes<SkillLevelModifierAttribute>();
-                if (attributes == null || attributes.Count() == 0)
+                if (attributes == null || attributes != null && !attributes.Any())
                 {
                     continue;
                 }
@@ -38,7 +38,7 @@ namespace SkillsPlusPlus
                     ConstructorInfo constructorInfo = type.GetConstructor(new Type[0]);
                     if (constructorInfo == null)
                     {
-                        Logger.Debug("Failed to find constructor info for {0}", type.FullName);
+                        Logger.Debug($"Failed to find constructor info for {type.FullName}");
                         Logger.Debug("Other constructors included");
                         foreach (ConstructorInfo info in type.GetConstructors())
                         {
@@ -61,8 +61,8 @@ namespace SkillsPlusPlus
                             {
                                 if (skillNameToModifierMap.TryGetValue(skillName, out BaseSkillModifier existingModifier))
                                 {
-                                    Logger.Warn("Skill modifier conflict!!!");
-                                    Logger.Warn("Cannot add {0} since {1} already exists for skill named {2}", someSkillModifier.GetType().FullName, existingModifier.GetType().FullName, skillName);
+                                    Logger.Warning("Skill modifier conflict!!!");
+                                    Logger.Warning($"Cannot add {someSkillModifier.GetType().FullName} since {existingModifier.GetType().FullName} already exists for skill named {skillName}");
                                     continue;
                                 }
                                 skillNameToModifierMap[skillName] = skillModifier;
@@ -71,8 +71,8 @@ namespace SkillsPlusPlus
                             {
                                 if (typeToModifierMap.TryGetValue(stateType, out BaseSkillModifier existingModifier))
                                 {
-                                    Logger.Warn("Skill modifier conflict!!!");
-                                    Logger.Warn("Cannot add {0} since {1} already exists for the entity state {2}", someSkillModifier.GetType().FullName, existingModifier.GetType().FullName, stateType.FullName);
+                                    Logger.Warning("Skill modifier conflict!!!");
+                                    Logger.Warning($"Cannot add {someSkillModifier.GetType().FullName} since {existingModifier.GetType().FullName} already exists for the entity state {stateType.FullName}");
                                     continue;
                                 }
                                 typeToModifierMap[stateType] = skillModifier;

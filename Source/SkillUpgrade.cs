@@ -37,11 +37,11 @@ namespace SkillsPlusPlus {
         void Awake() {
             this.characterBody = this.GetComponent<CharacterBody>();
             this.targetBaseSkillName = ((ScriptableObject)targetGenericSkill.skillDef)?.name;
-            Logger.Debug("Awake() targetBaseSkillName: {0}", targetBaseSkillName);
+            Logger.Debug($"Awake() targetBaseSkillName: {targetBaseSkillName}");
         }
 
         void OnEnable() {
-            Logger.Debug("OnEnable() targetBaseSkillName: {0}", targetBaseSkillName);
+            Logger.Debug($"OnEnable() targetBaseSkillName: {targetBaseSkillName}");
             this.targetGenericSkill.onSkillChanged += this.OnSkillChanged;
             On.EntityStates.BaseState.OnEnter += this.OnBaseStateEnter;
             On.EntityStates.EntityState.OnExit += this.OnBaseStateExit;
@@ -50,7 +50,7 @@ namespace SkillsPlusPlus {
         }
 
         void OnDisable() {
-            Logger.Debug("OnDisable() targetBaseSkillName: {0}", targetBaseSkillName);
+            Logger.Debug($"OnDisable() targetBaseSkillName: {targetBaseSkillName}");
             On.EntityStates.BaseState.OnEnter -= this.OnBaseStateEnter;
             On.EntityStates.EntityState.OnExit -= this.OnBaseStateExit;
             if (targetGenericSkill) {
@@ -66,7 +66,7 @@ namespace SkillsPlusPlus {
 
         public void SetSkillPointsController(SkillPointsController skillPointsController) {
             if (this.skillPointsController) {
-                Logger.Warn("Setting the skill points controller a second time is irregular behaviour. It should be added just once when the character body enables");
+                Logger.Warning("Setting the skill points controller a second time is irregular behaviour. It should be added just once when the character body enables");
             }
             this.skillPointsController = skillPointsController;
             RefreshUpgrades();
@@ -79,13 +79,13 @@ namespace SkillsPlusPlus {
         void OnSkillChanged(GenericSkill genericSkill) {
 
             this.targetBaseSkillName = ((ScriptableObject)genericSkill.skillDef)?.name;
-            Logger.Debug("OnSkillChanged({0})", targetBaseSkillName);
+            Logger.Debug($"OnSkillChanged({targetBaseSkillName})");
             RefreshUpgrades();
         }
 
         [Client]
         void OnSkillLevelChanged(int newSkillLevel) {
-            Logger.Debug("OnSkillLevelChanged({0})", newSkillLevel);
+            Logger.Debug($"OnSkillLevelChanged({newSkillLevel})");
             this.skillLevel = newSkillLevel;
             RefreshUpgrades();
         }
@@ -94,15 +94,15 @@ namespace SkillsPlusPlus {
 
         void RefreshUpgrades() {
             if (!isSurvivorEnabled) {
-                Logger.Debug("Couldn't refresh upgrades because the survivor is disabled. targetBaseSkillName: {0}", targetBaseSkillName);
+                Logger.Debug($"Couldn't refresh upgrades because the survivor is disabled. targetBaseSkillName: {targetBaseSkillName}");
                 return;
             };
             var activeSkillDef = GetActiveSkillDef(targetGenericSkill);
             if (activeSkillDef == null) {
-                Logger.Debug("Couldn't refresh upgrades because there is no active skill. targetBaseSkillName: {0}", targetBaseSkillName);
+                Logger.Debug($"Couldn't refresh upgrades because there is no active skill. targetBaseSkillName: {targetBaseSkillName}");
                 return;
             }
-            Logger.Debug("RefreshUpgrades() activeSkillDef: {0}", ((ScriptableObject)activeSkillDef)?.name);
+            Logger.Debug($"RefreshUpgrades() activeSkillDef: {((ScriptableObject)activeSkillDef)?.name}");
             var modifier = SkillModifierManager.GetSkillModifier(activeSkillDef);
             if (modifier != null) {
                 // TODO: rename OnSkillLeveledUp to OnSkillChanged
@@ -128,7 +128,7 @@ namespace SkillsPlusPlus {
                     if (skillPointsController && skillUpgrade.CanUpgradeSkill()) {
                         skillPointsController.DeductSkillPoints(1);
                         skillUpgrade.skillLevel += 1;
-                        Logger.Debug("CmdOnBuySkill({0}): skillLevel: {1}", skillUpgrade.targetBaseSkillName, skillUpgrade.skillLevel);
+                        Logger.Debug($"CmdOnBuySkill({skillUpgrade.targetBaseSkillName}): skillLevel: {skillUpgrade.skillLevel}");
                         skillUpgrade.RefreshUpgrades();
                     }
                 }

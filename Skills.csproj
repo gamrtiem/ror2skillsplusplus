@@ -52,10 +52,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="BepInEx.Core" Version="5.4.21" />
+    <PackageReference Include="pseudopulse-Rebindables" Version="1.0.4" />
     <PackageReference Include="R2API" Version="5.0.5" />
     <PackageReference Include="R2API.Core" Version="5.3.0" />
     <PackageReference Include="Rune580.Mods.RiskOfRain2.RiskOfOptions" Version="2.8.3" />
     <PackageReference Include="UnityEngine.Modules" Version="6000.3.1" IncludeAssets="compile" />
+    <PackageReference Include="xiaoxiao921-UnityHotReload" Version="1.0.1" />
   </ItemGroup>
   <ItemGroup>
     <None Remove=".gitattributes" />
@@ -77,17 +79,6 @@
     <None Update="Resources\SkillsPlusPlus.language">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="ExtraSkillSlots">
-      <HintPath>libs\KingEnderBrine-ExtraSkillSlots-1.6.2\plugins\ExtraSkillSlots\ExtraSkillSlots.dll</HintPath>
-    </Reference>
-    <Reference Include="Rebindables">
-      <HintPath>libs\Rebindables.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityHotReload">
-      <HintPath>libs\UnityHotReload.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <!--Target Name="PreBuild" BeforeTargets="PreBuildEvent">
     <Exec Command="IF &quot;$(ConfigurationName)&quot; == &quot;Release&quot; (&#xD;&#xA;del /Q &quot;$(TargetDir)$(TargetName).zip&quot;&#xD;&#xA;)" />

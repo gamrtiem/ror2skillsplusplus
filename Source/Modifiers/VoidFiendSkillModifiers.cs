@@ -36,10 +36,10 @@ namespace SkillsPlusPlus.Source.Modifiers
         private int debuffTimerAdd;
         public BuffDef VoidFiendSpeedBuff;
         private int survlevel;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            surv = characterBody;
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            surv = characterBodyLevelup;
             survlevel = level;
         }
 
@@ -175,11 +175,11 @@ namespace SkillsPlusPlus.Source.Modifiers
         public float stockamount;
         public int skilllevel;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
             skilllevel = level;
-            surv = characterBody;
+            surv = characterBodyLevelup;
         }
         public override void OnSkillEnter(FireCorruptDisks skillState, int level)
         {
@@ -220,10 +220,10 @@ namespace SkillsPlusPlus.Source.Modifiers
         private BuffDef VoidFiendArmorBuff;
         private CharacterBody surv;
         private int skilllevel;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            surv = characterBody;
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            surv = characterBodyLevelup;
             skilllevel = level;
         }
         public override void OnSkillExit(VoidBlinkUp skillState, int level)
@@ -267,10 +267,10 @@ namespace SkillsPlusPlus.Source.Modifiers
     {
         private BuffDef VoidFiendDamageSpeedBuff;
         private CharacterBody surv;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            surv = characterBody;
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            surv = characterBodyLevelup;
         }
         public override void OnSkillExit(VoidBlinkDown skillState, int level)
         {
@@ -327,10 +327,10 @@ namespace SkillsPlusPlus.Source.Modifiers
     internal class VoidFiendCrushHealthSkillModifier : BaseSkillModifier
     {
         private CharacterBody surv;
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
-            surv = characterBody;
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
+            surv = characterBodyLevelup;
         }
         public override void OnSkillEnter(BaseState skillState, int level)
         {

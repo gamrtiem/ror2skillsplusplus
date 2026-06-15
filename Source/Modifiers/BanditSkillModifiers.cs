@@ -62,12 +62,12 @@ namespace SkillsPlusPlus.Modifiers
             slash.damageCoefficient = MultScaling(slash.damageCoefficient, 0.2f, level);
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             //Hitbox Scaling
-            HitBoxGroup hitboxGroup = characterBody.modelLocator.modelTransform.GetComponent<HitBoxGroup>();
+            HitBoxGroup hitboxGroup = characterBodyLevelup.modelLocator.modelTransform.GetComponent<HitBoxGroup>();
 
             if (hitboxGroup == null || hitboxGroup.groupName != "SlashBlade")
             {
@@ -97,9 +97,9 @@ namespace SkillsPlusPlus.Modifiers
             skillState.baseDuration = skillState.baseDuration + (skillState.baseDuration * (level / 2) * 0.5f);
             skillState.damageCoefficient = MultScaling(skillState.damageCoefficient, 0.1f, level);
         }
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
         }
     }
 
@@ -137,7 +137,7 @@ namespace SkillsPlusPlus.Modifiers
 
         }
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
             if (Mathf.Abs(baseRadius - 0) < 0.1f)
             {
@@ -182,9 +182,9 @@ namespace SkillsPlusPlus.Modifiers
         {
             base.OnSkillEnter(skillState, level);
         }
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (!resetSkill)
             {
@@ -228,9 +228,9 @@ namespace SkillsPlusPlus.Modifiers
     {
         private static SkillUpgrade revolverSkill;
 
-        public override void OnSkillLeveledUp(int level, CharacterBody characterBody, SkillDef skillDef)
+        public override void OnSkillLeveledUp(int level, CharacterBody characterBodyLevelup, SkillDef skillDef)
         {
-            base.OnSkillLeveledUp(level, characterBody, skillDef);
+            base.OnSkillLeveledUp(level, characterBodyLevelup, skillDef);
 
             if (!revolverSkill)
             {
